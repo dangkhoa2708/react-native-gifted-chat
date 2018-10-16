@@ -109,6 +109,13 @@ export default class Bubble extends React.PureComponent {
     return null;
   }
 
+  renderRetry() {
+    if (this.props.renderRetry) {
+      return this.props.renderRetry(this.props);
+    }
+    return null;
+  }
+
   renderTime() {
     if (this.props.currentMessage.createdAt) {
       const { containerStyle, wrapperStyle, ...timeProps } = this.props;
@@ -130,29 +137,36 @@ export default class Bubble extends React.PureComponent {
   render() {
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-        <View
-          style={[
-            styles[this.props.position].wrapper,
-            this.props.wrapperStyle[this.props.position],
-            this.handleBubbleToNext(),
-            this.handleBubbleToPrevious(),
-          ]}
-        >
-          <TouchableWithoutFeedback
-            onLongPress={this.onLongPress}
-            accessibilityTraits="text"
-            {...this.props.touchableProps}
-          >
-            <View>
-              {this.renderCustomView()}
-              {this.renderMessageImage()}
-              {this.renderMessageText()}
-              <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
-                {this.renderTime()}
-                {this.renderTicks()}
-              </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {this.props.position === 'right' &&
+            <View style={{ marginLeft: 60, marginRight: 10 }}>
+              {this.renderRetry()}
             </View>
-          </TouchableWithoutFeedback>
+          }
+          <View
+            style={[
+              styles[this.props.position].wrapper,
+              this.props.wrapperStyle[this.props.position],
+              this.handleBubbleToNext(),
+              this.handleBubbleToPrevious(),
+            ]}
+          >
+            <TouchableWithoutFeedback
+              onLongPress={this.onLongPress}
+              accessibilityTraits="text"
+              {...this.props.touchableProps}
+            >
+              <View>
+                {this.renderCustomView()}
+                {this.renderMessageImage()}
+                {this.renderMessageText()}
+                <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
+                  {this.renderTime()}
+                  {this.renderTicks()}
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
       </View>
     );
@@ -188,7 +202,7 @@ const styles = {
     wrapper: {
       borderRadius: 15,
       backgroundColor: Color.defaultBlue,
-      marginLeft: 60,
+      // marginLeft: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
     },
@@ -240,6 +254,7 @@ Bubble.defaultProps = {
   tickStyle: {},
   containerToNextStyle: {},
   containerToPreviousStyle: {},
+  renderRetry: null
 };
 
 Bubble.propTypes = {
@@ -249,6 +264,7 @@ Bubble.propTypes = {
   renderMessageImage: PropTypes.func,
   renderMessageText: PropTypes.func,
   renderCustomView: PropTypes.func,
+  renderRetry: PropTypes.func,
   renderTime: PropTypes.func,
   renderTicks: PropTypes.func,
   position: PropTypes.oneOf(['left', 'right']),
