@@ -33,20 +33,20 @@ const styles = StyleSheet.create({
   }
 });
 
-MessageImage.defaultProps = {
+MessageVideo.defaultProps = {
   currentMessage: {
     image: null,
   },
   containerStyle: {},
   imageStyle: {},
-  imageProps: {},
+  videoProps: {},
   lightboxProps: {},
 };
 
-MessageImage.propTypes = {
+MessageVideo.propTypes = {
   currentMessage: PropTypes.object,
   containerStyle: ViewPropTypes.style,
   imageStyle: Image.propTypes.style,
-  imageProps: PropTypes.object,
+  videoProps: PropTypes.object,
   lightboxProps: PropTypes.object,
 };
