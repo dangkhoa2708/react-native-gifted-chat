@@ -138,6 +138,9 @@ export default class Bubble extends React.PureComponent {
     const {
       onPress = () => { }
     } = this.props
+    const backgroundColor = {
+      backgroundColor: this.props.currentMessage.image ? null : styles[this.props.position].wrapper.backgroundColor
+    }
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -152,6 +155,7 @@ export default class Bubble extends React.PureComponent {
               this.props.wrapperStyle[this.props.position],
               this.handleBubbleToNext(),
               this.handleBubbleToPrevious(),
+                   backgroundColor
             ]}
           >
             <TouchableWithoutFeedback
