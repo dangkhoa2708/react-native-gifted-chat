@@ -17,6 +17,10 @@ export default class Bubble extends React.PureComponent {
     super(props);
     this.onLongPress = this.onLongPress.bind(this);
   }
+  
+  state = {
+    paused: true
+  }
 
   onLongPress() {
     if (this.props.onLongPress) {
@@ -71,10 +75,30 @@ export default class Bubble extends React.PureComponent {
   renderMessageVideo() {
     if (this.props.currentMessage.video) {
       const { containerStyle, wrapperStyle, ...videoProps } = this.props;
-      return <Video
-        style={{ width: 200, height: 250 }}
-        source={{ uri: this.props.currentMessage.video }}
-      />
+       return (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.player.presentFullscreenPlayer()
+            // this.setState({ paused: !this.state.paused })
+          }}
+        >
+          <View>
+            <Video
+              ref={(ref) => this.player = ref}
+              repeat={true}
+              onEnd={() => { this.setState({ paused: true }) }}
+              // paused={this.state.paused}
+              style={{ width: 200, height: 250 }}
+              source={{ uri: this.props.currentMessage.video }}
+            />
+            <Text
+              style={{ color: 'red', position: 'absolute', top: 80, right: 40 }}
+            >
+              {this.state.paused ? 'Click to Play' : 'Click to Pause'}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      )
     }
     return null;
   }
