@@ -51,7 +51,7 @@ const styles = {
       ...containerStyle,
     },
     text: {
-      color: Color.white,
+      color: Color.timeTextColor,
       ...textStyle,
     },
   }),
