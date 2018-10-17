@@ -87,7 +87,7 @@ export default class Bubble extends React.PureComponent {
               ref={(ref) => this.player = ref}
               repeat={true}
               onEnd={() => { this.setState({ paused: true }) }}
-              // paused={this.state.paused}
+              paused={this.state.paused}
               style={{ width: 200, height: 250 }}
               source={{ uri: this.props.currentMessage.video }}
             />
