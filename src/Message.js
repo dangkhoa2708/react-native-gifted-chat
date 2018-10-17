@@ -8,6 +8,7 @@ import Avatar from './Avatar';
 import Bubble from './Bubble';
 import SystemMessage from './SystemMessage';
 import Day from './Day';
+import Time from './Time';
 
 import { isSameUser, isSameDay } from './utils';
 
@@ -34,6 +35,10 @@ const styles = {
 
 export default class Message extends React.PureComponent {
 
+   state = {
+    showTime: false
+  }
+
   getInnerComponentProps() {
     const { containerStyle, ...props } = this.props;
     return {
@@ -59,7 +64,11 @@ export default class Message extends React.PureComponent {
     if (this.props.renderBubble) {
       return this.props.renderBubble(bubbleProps);
     }
-    return <Bubble {...bubbleProps} />;
+    return <Bubble 
+    onPress={() => {
+        this.setState({ showTime: !this.state.showTime })
+      }}
+    {...bubbleProps} />;
   }
 
   renderSystemMessage() {
@@ -90,6 +99,13 @@ export default class Message extends React.PureComponent {
         {this.props.currentMessage.system ? (
           this.renderSystemMessage()
         ) : (
+          <View>
+              {this.state.showTime &&
+                <View style={{ alignItems: 'center' }}>
+                  {this.renderTime()}
+                  {this.renderTicks()}
+                </View>
+              }
           <View
             style={[
               styles[this.props.position].container,
@@ -102,6 +118,7 @@ export default class Message extends React.PureComponent {
             {this.renderBubble()}
             {this.props.position === 'right' ? this.renderAvatar() : null}
           </View>
+        </View>
         )}
       </View>
     );
