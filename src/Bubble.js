@@ -3,10 +3,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Text, Clipboard, StyleSheet, TouchableWithoutFeedback, View, ViewPropTypes } from 'react-native';
-
+import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
-import MessageVideo from './MessageVideo';
 import Time from './Time';
 import Color from './Color';
 
@@ -72,7 +71,10 @@ export default class Bubble extends React.PureComponent {
   renderMessageVideo() {
     if (this.props.currentMessage.video) {
       const { containerStyle, wrapperStyle, ...videoProps } = this.props;
-      <MessageVideo {...videoProps} />;
+      return <Video
+        style={{ width: 200, height: 250 }}
+        source={{ uri: this.props.currentMessage.video }}
+      />
     }
     return null;
   }
