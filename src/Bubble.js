@@ -135,6 +135,9 @@ export default class Bubble extends React.PureComponent {
   }
 
   render() {
+    const {
+      onPress = () => { }
+    } = this.props
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -152,6 +155,7 @@ export default class Bubble extends React.PureComponent {
             ]}
           >
             <TouchableWithoutFeedback
+                   onPress={onPress}
               onLongPress={this.onLongPress}
               accessibilityTraits="text"
               {...this.props.touchableProps}
@@ -160,10 +164,6 @@ export default class Bubble extends React.PureComponent {
                 {this.renderCustomView()}
                 {this.renderMessageImage()}
                 {this.renderMessageText()}
-                <View style={[styles.bottom, this.props.bottomContainerStyle[this.props.position]]}>
-                  {this.renderTime()}
-                  {this.renderTicks()}
-                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>
