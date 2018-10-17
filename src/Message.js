@@ -47,6 +47,17 @@ export default class Message extends React.PureComponent {
       isSameDay,
     };
   }
+    
+  renderTime() {
+    if (this.props.currentMessage.createdAt) {
+      const { containerStyle, wrapperStyle, ...timeProps } = this.props;
+      if (this.props.renderTime) {
+        return this.props.renderTime(timeProps);
+      }
+      return <Time {...timeProps} />;
+    }
+    return null;
+  }
 
   renderDay() {
     if (this.props.currentMessage.createdAt) {
@@ -103,7 +114,6 @@ export default class Message extends React.PureComponent {
               {this.state.showTime &&
                 <View style={{ alignItems: 'center' }}>
                   {this.renderTime()}
-                  {this.renderTicks()}
                 </View>
               }
           <View
