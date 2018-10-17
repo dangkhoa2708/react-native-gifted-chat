@@ -6,6 +6,7 @@ import { Text, Clipboard, StyleSheet, TouchableWithoutFeedback, View, ViewPropTy
 
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
+import MessageVideo from './MessageVideo';
 import Time from './Time';
 import Color from './Color';
 
@@ -64,6 +65,14 @@ export default class Bubble extends React.PureComponent {
         styles[this.props.position].containerToPrevious,
         this.props.containerToPreviousStyle[this.props.position],
       ]);
+    }
+    return null;
+  }
+  
+  renderMessageVideo() {
+    if (this.props.currentMessage.video) {
+      const { containerStyle, wrapperStyle, ...videoProps } = this.props;
+      <MessageVideo {...videoProps} />;
     }
     return null;
   }
@@ -167,6 +176,7 @@ export default class Bubble extends React.PureComponent {
               <View>
                 {this.renderCustomView()}
                 {this.renderMessageImage()}
+                {this.renderMessageVideo()}
                 {this.renderMessageText()}
               </View>
             </TouchableWithoutFeedback>
