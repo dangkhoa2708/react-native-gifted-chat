@@ -35,19 +35,20 @@ const styles = {
 
 export default class Message extends React.PureComponent {
 
-   state = {
+  state = {
     showTime: false
   }
 
   getInnerComponentProps() {
-    const { containerStyle, ...props } = this.props;
+    const { containerStyle, selectedId, ...props } = this.props;
     return {
       ...props,
       isSameUser,
       isSameDay,
+      selectedId
     };
   }
-    
+
   renderTime() {
     if (this.props.currentMessage.createdAt) {
       const { containerStyle, wrapperStyle, ...timeProps } = this.props;
@@ -71,15 +72,14 @@ export default class Message extends React.PureComponent {
   }
 
   renderBubble() {
+    const { onBubblePress = (item) => { } } = this.props
     const bubbleProps = this.getInnerComponentProps();
     if (this.props.renderBubble) {
       return this.props.renderBubble(bubbleProps);
     }
-    return <Bubble 
-    onPress={() => {
-        this.setState({ showTime: !this.state.showTime })
-      }}
-    {...bubbleProps} />;
+    return <Bubble
+      onPress={onBubblePress}
+      {...bubbleProps} />;
   }
 
   renderSystemMessage() {
@@ -110,26 +110,26 @@ export default class Message extends React.PureComponent {
         {this.props.currentMessage.system ? (
           this.renderSystemMessage()
         ) : (
-          <View>
-              {this.state.showTime &&
+            <View>
+              {this.props.selectedId === this.props.currentMessage._id &&
                 <View style={{ alignItems: 'center' }}>
                   {this.renderTime()}
                 </View>
               }
-          <View
-            style={[
-              styles[this.props.position].container,
-              { marginBottom: sameUser ? 2 : 10 },
-              !this.props.inverted && { marginBottom: 2 },
-              this.props.containerStyle[this.props.position],
-            ]}
-          >
-            {this.props.position === 'left' ? this.renderAvatar() : null}
-            {this.renderBubble()}
-            {this.props.position === 'right' ? this.renderAvatar() : null}
-          </View>
-        </View>
-        )}
+              <View
+                style={[
+                  styles[this.props.position].container,
+                  { marginBottom: sameUser ? 2 : 10 },
+                  !this.props.inverted && { marginBottom: 2 },
+                  this.props.containerStyle[this.props.position],
+                ]}
+              >
+                {this.props.position === 'left' ? this.renderAvatar() : null}
+                {this.renderBubble()}
+                {this.props.position === 'right' ? this.renderAvatar() : null}
+              </View>
+            </View>
+          )}
       </View>
     );
   }
