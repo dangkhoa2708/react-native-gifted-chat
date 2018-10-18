@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity,TouchableWithoutFeedback, View, ViewPropTypes } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
