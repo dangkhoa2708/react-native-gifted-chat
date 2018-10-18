@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableWithoutFeedback, View, ViewPropTypes } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -17,7 +17,7 @@ export default class Bubble extends React.PureComponent {
     super(props);
     this.onLongPress = this.onLongPress.bind(this);
   }
-  
+
   state = {
     paused: true
   }
@@ -71,11 +71,11 @@ export default class Bubble extends React.PureComponent {
     }
     return null;
   }
-  
+
   renderMessageVideo() {
     if (this.props.currentMessage.video) {
       const { containerStyle, wrapperStyle, ...videoProps } = this.props;
-       return (
+      return (
         <TouchableWithoutFeedback
           onPress={() => {
             this.player.presentFullscreenPlayer()
@@ -171,11 +171,17 @@ export default class Bubble extends React.PureComponent {
 
   render() {
     const {
-      onPress = () => { }
+      onPress = (item) => { }
     } = this.props
-    const backgroundColor = {
-      backgroundColor: this.props.currentMessage.image ? null : styles[this.props.position].wrapper.backgroundColor
+    const selected = this.props.selectedId === this.props.currentMessage._id
+    const colorBackground = {
+      left: selected ? '#C0C0C2' : Color.leftBubbleBackground,
+      right: selected ? '#146EC0' : Color.defaultBlue
     }
+    const backgroundColor = {
+      backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
+    }
+
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -190,22 +196,22 @@ export default class Bubble extends React.PureComponent {
               this.props.wrapperStyle[this.props.position],
               this.handleBubbleToNext(),
               this.handleBubbleToPrevious(),
-                   backgroundColor
+              backgroundColor
             ]}
           >
-            <TouchableWithoutFeedback
-                   onPress={onPress}
+            <TouchableOpacity
+              onPress={() => onPress(this.props.currentMessage)}
               onLongPress={this.onLongPress}
               accessibilityTraits="text"
               {...this.props.touchableProps}
             >
-              <View>
-                {this.renderCustomView()}
-                {this.renderMessageImage()}
-                {this.renderMessageVideo()}
-                {this.renderMessageText()}
-              </View>
-            </TouchableWithoutFeedback>
+              {/* <View> */}
+              {this.renderCustomView()}
+              {this.renderMessageImage()}
+              {this.renderMessageVideo()}
+              {this.renderMessageText()}
+              {/* </View> */}
+            </TouchableOpacity>
           </View>
         </View>
       </View>
