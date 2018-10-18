@@ -303,6 +303,9 @@ class GiftedChat extends React.Component {
 
 
   renderMessages() {
+    const {
+      onBubblePress = (item) => { }, selectedId
+    } = this.props
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
     return (
       <AnimatedView
@@ -312,6 +315,8 @@ class GiftedChat extends React.Component {
       >
         <MessageContainer
           {...this.props}
+          selectedId={selectedId}
+          onBubblePress={onBubblePress}
           invertibleScrollViewProps={this.invertibleScrollViewProps}
           messages={this.getMessages()}
           ref={(component) => (this._messageContainerRef = component)}
