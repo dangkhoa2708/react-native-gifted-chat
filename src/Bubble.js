@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity,TouchableWithoutFeedback, View, ViewPropTypes } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -82,20 +82,27 @@ export default class Bubble extends React.PureComponent {
             // this.setState({ paused: !this.state.paused })
           }}
         >
-          <View>
+          <View
+
+          >
             <Video
               ref={(ref) => this.player = ref}
               repeat={true}
+              resizeMode="contain"
               onEnd={() => { this.setState({ paused: true }) }}
               paused={this.state.paused}
-              style={{ width: 200, height: 250 }}
+              style={{ width: 200, height: 200 }}
               source={{ uri: this.props.currentMessage.video }}
             />
-            <Text
-              style={{ color: 'red', position: 'absolute', top: 80, right: 40 }}
-            >
-              {this.state.paused ? 'Click to Play' : 'Click to Pause'}
-            </Text>
+            {/* <View style={{
+              position: 'absolute',
+              top: 0, left: 0, right: 0, bottom: 0,
+              backgroundColor: 'rgba(25,25,25,0.4)'
+            }} /> */}
+            <Image
+              source={require('./assets/images/Bitmap.png')}
+              style={{ position: 'absolute', top: 60, right: 60 }}
+            />
           </View>
         </TouchableWithoutFeedback>
       )
