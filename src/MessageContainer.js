@@ -93,7 +93,7 @@ export default class MessageContainer extends React.PureComponent {
       }
       item.user = {};
     }
-    const { messages, ...restProps } = this.props;
+    const { messages, onBubblePress = (item) => { }, selectedId, ...restProps } = this.props;
     const previousMessage = messages[index + 1] || {};
     const nextMessage = messages[index - 1] || {};
 
@@ -103,6 +103,8 @@ export default class MessageContainer extends React.PureComponent {
       currentMessage: item,
       previousMessage,
       nextMessage,
+      onBubblePress: onBubblePress,
+      selectedId: selectedId,
       position: item.user._id === this.props.user._id ? 'right' : 'left',
     };
 
@@ -163,7 +165,7 @@ MessageContainer.defaultProps = {
   user: {},
   renderFooter: null,
   renderMessage: null,
-  onLoadEarlier: () => {},
+  onLoadEarlier: () => { },
   inverted: true,
   loadEarlier: false,
   listViewProps: {},
