@@ -191,9 +191,9 @@ export default class Bubble extends React.PureComponent {
 
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={[{ flexDirection: 'row', alignItems: 'center' }, styles[this.props.position].margin]}>
           {this.props.position === 'right' &&
-            <View style={{ marginLeft: 60, marginRight: 10 }}>
+            <View style={{ marginRight: 10 }}>
               {this.renderRetry()}
             </View>
           }
@@ -236,7 +236,6 @@ const styles = {
     wrapper: {
       borderRadius: 15,
       backgroundColor: Color.leftBubbleBackground,
-      marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
     },
@@ -246,6 +245,9 @@ const styles = {
     containerToPrevious: {
       borderTopLeftRadius: 3,
     },
+    margin: {
+      marginRight: 60
+    }
   }),
   right: StyleSheet.create({
     container: {
@@ -265,6 +267,9 @@ const styles = {
     containerToPrevious: {
       borderTopRightRadius: 3,
     },
+    margin: {
+      marginLeft: 60
+    }
   }),
   bottom: {
     flexDirection: 'row',
