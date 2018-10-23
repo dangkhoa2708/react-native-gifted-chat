@@ -206,19 +206,19 @@ export default class Bubble extends React.PureComponent {
               backgroundColor
             ]}
           >
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               onPress={() => onPress(this.props.currentMessage)}
               onLongPress={this.onLongPress}
               accessibilityTraits="text"
               {...this.props.touchableProps}
             >
-              {/* <View> */}
-              {this.renderCustomView()}
-              {this.renderMessageImage()}
-              {this.renderMessageVideo()}
-              {this.renderMessageText()}
-              {/* </View> */}
-            </TouchableOpacity>
+              <View>
+                {this.renderCustomView()}
+                {this.renderMessageImage()}
+                {this.renderMessageVideo()}
+                {this.renderMessageText()}
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </View>
       </View>
