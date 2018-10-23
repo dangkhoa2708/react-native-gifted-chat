@@ -182,8 +182,8 @@ export default class Bubble extends React.PureComponent {
     } = this.props
     const selected = this.props.selectedId === this.props.currentMessage._id
     const colorBackground = {
-      left: selected ? '#C0C0C2' : Color.leftBubbleBackground,
-      right: selected ? '#146EC0' : Color.defaultBlue
+      left: selected ? '#D3D3D3' : Color.leftBubbleBackground,
+      right: selected ? '#0063FF' : Color.defaultBlue
     }
     const backgroundColor = {
       backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
