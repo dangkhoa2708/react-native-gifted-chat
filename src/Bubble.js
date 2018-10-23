@@ -188,6 +188,10 @@ export default class Bubble extends React.PureComponent {
     const backgroundColor = {
       backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
     }
+    
+      const overflow = {
+      overflow: this.props.currentMessage.image ? 'hidden' : 'visible'
+    }
 
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
@@ -203,7 +207,8 @@ export default class Bubble extends React.PureComponent {
               this.props.wrapperStyle[this.props.position],
               this.handleBubbleToNext(),
               this.handleBubbleToPrevious(),
-              backgroundColor
+              backgroundColor,
+                   overflow
             ]}
           >
             <TouchableWithoutFeedback
