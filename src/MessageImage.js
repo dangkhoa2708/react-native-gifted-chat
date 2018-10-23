@@ -23,13 +23,13 @@ export default function MessageImage({
     let queryString = ''
     if (queryStringArr.length > 0) {
       queryString = small ?
-        `?${queryStringArr.join('&')}&auto=format&fit=crop&w=100&h=100&dpr=2.0&fm=jpg&q=40"`
+        `?${queryStringArr.join('&')}&auto=format&fit=crop&w=150&h=100&dpr=2.0&fm=jpg&q=40"`
         :
         `?${queryStringArr.join('&')}&auto=format&fit=crop&dpr=2.0&fm=jpg&q=40"`
     } else {
       queryString = small
         ?
-        '?auto=format&fit=crop&w=100&h=100&dpr=2.0&fm=jpg&q=40'
+        '?auto=format&fit=crop&w=150&h=100&dpr=2.0&fm=jpg&q=40'
         :
         '?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40'
     }
