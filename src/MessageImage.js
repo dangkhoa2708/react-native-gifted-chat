@@ -13,30 +13,31 @@ export default function MessageImage({
   currentMessage,
 }) {
   return (
-    <View style={[styles.container, containerStyle]}>
-      <Lightbox
-        activeProps={{
-          style: styles.imageActive,
-        }}
-        {...lightboxProps}
-      >
+    <Lightbox
+      activeProps={{
+        style: styles.imageActive,
+      }}
+      {...lightboxProps}
+    >
+      <View style={[styles.container, containerStyle]}>
         <Image
           {...imageProps}
-          style={[styles.image, imageStyle]}
+          style={styles.image}
           source={{ uri: currentMessage.image }}
         />
-      </Lightbox>
-    </View>
+      </View>
+
+    </Lightbox>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  image: {
+  container: {
     width: 150,
-    height: 100,
-    borderRadius: 8,
-    resizeMode: 'cover',
+    height: 100
+  },
+  image: {
+    flex: 1
   },
   imageActive: {
     flex: 1,
