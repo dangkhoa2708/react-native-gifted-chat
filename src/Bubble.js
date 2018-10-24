@@ -74,34 +74,31 @@ export default class Bubble extends React.PureComponent {
 
   renderMessageVideo() {
     if (this.props.currentMessage.video) {
-      const { containerStyle, wrapperStyle, ...videoProps } = this.props;
+      const { containerStyle, wrapperStyle, onVideoPress = (item) => { }, ...videoProps } = this.props;
       return (
         <TouchableWithoutFeedback
           onPress={() => {
-            this.player.presentFullscreenPlayer()
-            // this.setState({ paused: !this.state.paused })
+            if (Platform.OS === 'ios') {
+              this.player.presentFullscreenPlayer()
+            } else {
+              onVideoPress(this.props.currentMessage)
+            }
           }}
         >
-          <View
-
-          >
+          <View style>
             <Video
+              // controls
               ref={(ref) => this.player = ref}
-              repeat={true}
-              resizeMode="contain"
+              resizeMode="cover"
+              repeat
               onEnd={() => { this.setState({ paused: true }) }}
               paused={this.state.paused}
-              style={{ width: 200, height: 200 }}
+              style={styles.containerVideo}
               source={{ uri: this.props.currentMessage.video }}
             />
-            {/* <View style={{
-              position: 'absolute',
-              top: 0, left: 0, right: 0, bottom: 0,
-              backgroundColor: 'rgba(25,25,25,0.4)'
-            }} /> */}
             <Image
               source={require('./assets/images/Bitmap.png')}
-              style={{ position: 'absolute', top: 60, right: 60 }}
+              style={{ position: 'absolute', top: 25, left: 50, width: 50, height: 50 }}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -109,7 +106,7 @@ export default class Bubble extends React.PureComponent {
     }
     return null;
   }
-
+  
   renderMessageText() {
     if (this.props.currentMessage.text) {
       const { containerStyle, wrapperStyle, ...messageTextProps } = this.props;
