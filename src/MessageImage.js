@@ -41,17 +41,6 @@ export default function MessageImage({
       activeProps={{
         style: styles.imageActive,
       }}
-      renderHeader={close => (
-        <TouchableWithoutFeedback
-          onPress={close}>
-          <View style={styles.closeHolder}
-          >
-            <Image
-              source={require('./assets/images/ic_clear.png')}
-              style={styles.close} />
-          </View>
-        </ TouchableWithoutFeedback>
-      )}
       renderContent={() => {
         console.log(currentMessage.image)
         return (
