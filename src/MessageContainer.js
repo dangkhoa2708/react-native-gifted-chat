@@ -93,7 +93,7 @@ export default class MessageContainer extends React.PureComponent {
       }
       item.user = {};
     }
-    const { messages, onBubblePress = (item) => { }, selectedId, ...restProps } = this.props;
+    const { messages, onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId, ...restProps } = this.props;
     const previousMessage = messages[index + 1] || {};
     const nextMessage = messages[index - 1] || {};
 
@@ -104,6 +104,7 @@ export default class MessageContainer extends React.PureComponent {
       previousMessage,
       nextMessage,
       onBubblePress: onBubblePress,
+      onVideoPress: onVideoPress,
       selectedId: selectedId,
       position: item.user._id === this.props.user._id ? 'right' : 'left',
     };
