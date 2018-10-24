@@ -304,7 +304,7 @@ class GiftedChat extends React.Component {
 
   renderMessages() {
     const {
-      onBubblePress = (item) => { }, selectedId
+      onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId
     } = this.props
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
     return (
@@ -317,6 +317,7 @@ class GiftedChat extends React.Component {
           {...this.props}
           selectedId={selectedId}
           onBubblePress={onBubblePress}
+          onVideoPress={onVideoPress}
           invertibleScrollViewProps={this.invertibleScrollViewProps}
           messages={this.getMessages()}
           ref={(component) => (this._messageContainerRef = component)}
