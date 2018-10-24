@@ -72,13 +72,14 @@ export default class Message extends React.PureComponent {
   }
 
   renderBubble() {
-    const { onBubblePress = (item) => { } } = this.props
+    const { onBubblePress = (item) => { }, onVideoPress = (item) => { } } = this.props
     const bubbleProps = this.getInnerComponentProps();
     if (this.props.renderBubble) {
       return this.props.renderBubble(bubbleProps);
     }
     return <Bubble
       onPress={onBubblePress}
+      onVideoPress={onVideoPress}
       {...bubbleProps} />;
   }
 
