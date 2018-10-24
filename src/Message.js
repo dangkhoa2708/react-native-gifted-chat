@@ -103,16 +103,18 @@ export default class Message extends React.PureComponent {
   }
 
   render() {
-    const sameUser = isSameUser(this.props.currentMessage, this.props.nextMessage);
+    const { currentMessage, nextMessage, previousMessage, inverted } = this.props
+    const sameUser = isSameUser(currentMessage, nextMessage);
     return (
       <View>
         {this.renderDay()}
-        {this.props.currentMessage.system ? (
+        {currentMessage.system ? (
           this.renderSystemMessage()
         ) : (
             <View>
               {this.props.selectedId === this.props.currentMessage._id &&
-                <View style={{ alignItems: 'center' }}>
+                isSameDay(currentMessage, inverted ? previousMessage : nextMessage) &&
+                < View style={{ alignItems: 'center' }}>
                   {this.renderTime()}
                 </View>
               }
@@ -129,7 +131,8 @@ export default class Message extends React.PureComponent {
                 {this.props.position === 'right' ? this.renderAvatar() : null}
               </View>
             </View>
-          )}
+          )
+        }
       </View>
     );
   }
