@@ -13,7 +13,7 @@ export default function MessageImage({
   imageStyle,
   currentMessage,
 }) {
-  const convertToImgix = (url, options = {}, small = true) => {
+  const convertToImgix = (url, options = {}, width, height) => {
     if (!url) return ''
     const queryStringArr = []
     for (const key of Object.keys(options)) {
@@ -22,16 +22,11 @@ export default function MessageImage({
 
     let queryString = ''
     if (queryStringArr.length > 0) {
-      queryString = small ?
-        `?${queryStringArr.join('&')}&auto=format&fit=crop&w=150&h=100&dpr=2.0&fm=jpg&q=40"`
-        :
-        `?${queryStringArr.join('&')}&auto=format&fit=crop&dpr=2.0&fm=jpg&q=40"`
+      queryString =
+        `?${queryStringArr.join('&')}&auto=format&fit=crop&w=${width}&h=${width}&dpr=2.0&fm=jpg&q=40"`
     } else {
-      queryString = small
-        ?
-        '?auto=format&fit=crop&w=150&h=100&dpr=2.0&fm=jpg&q=40'
-        :
-        '?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40'
+      queryString =
+        `?auto=format&fit=crop&w=${width}&h=${height}&dpr=2.0&fm=jpg&q=40`
     }
     url = url
       .replace(
@@ -51,11 +46,12 @@ export default function MessageImage({
         return (
           <Image
             {...imageProps}
+            resizeMode="contain"
             style={{
               width: width,
               height: height
             }}
-            source={{ uri: convertToImgix(currentMessage.image, {}, false) }}
+            source={{ uri: currentMessage.image }}
           />
         )
       }}
@@ -66,7 +62,7 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          source={{ uri: convertToImgix(currentMessage.image) }}
+          source={{ uri: convertToImgix(currentMessage.image, {}, 150, 100) }}
         />
       </View>
 
