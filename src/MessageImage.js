@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Image, StyleSheet, View, ViewPropTypes, Dimensions } from 'react-native';
+import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import Lightbox from 'react-native-lightbox';
 
 const { width, height } = Dimensions.get('window')
@@ -41,6 +41,17 @@ export default function MessageImage({
       activeProps={{
         style: styles.imageActive,
       }}
+      renderHeader={close => (
+        <TouchableWithoutFeedback
+          onPress={close}>
+          <View style={styles.closeHolder}
+          >
+            <Image
+              source={require('./assets/images/ic_clear.png')}
+              style={styles.close} />
+          </View>
+        </ TouchableWithoutFeedback>
+      )}
       renderContent={() => {
         console.log(currentMessage.image)
         return (
@@ -83,6 +94,19 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
   },
+  close: {
+    width: 30,
+    height: 30
+  },
+  closeHolder: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
 
 MessageImage.defaultProps = {
