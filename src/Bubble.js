@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image,Platform, ActivityIndicator } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -85,7 +85,7 @@ export default class Bubble extends React.PureComponent {
             }
           }}
         >
-          <View style>
+          <View>
             <Video
               // controls
               ref={(ref) => this.player = ref}
@@ -104,7 +104,18 @@ export default class Bubble extends React.PureComponent {
         </TouchableWithoutFeedback>
       )
     }
-    return null;
+    if (this.props.currentMessage.video == '') {
+      return (
+        <View style={[styles.containerVideo, { alignItems: 'center', justifyContent: 'center' }]}>
+          <ActivityIndicator
+            animating
+            size="small"
+            color="black"
+          />
+        </View>
+      )
+    }
+    return null
   }
 
   renderMessageText() {
