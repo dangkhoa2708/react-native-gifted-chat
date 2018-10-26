@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image, Platform } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -85,7 +85,7 @@ export default class Bubble extends React.PureComponent {
             }
           }}
         >
-          <View style>
+          <View>
             <Video
               // controls
               ref={(ref) => this.player = ref}
@@ -104,9 +104,14 @@ export default class Bubble extends React.PureComponent {
         </TouchableWithoutFeedback>
       )
     }
-    return null;
+    if (this.props.currentMessage.video == '') {
+      return (
+        <View style={styles.containerVideo} />
+      )
+    }
+    return null
   }
-  
+
   renderMessageText() {
     if (this.props.currentMessage.text) {
       const { containerStyle, wrapperStyle, ...messageTextProps } = this.props;
@@ -185,16 +190,16 @@ export default class Bubble extends React.PureComponent {
     const backgroundColor = {
       backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
     }
-    
-      const overflow = {
-      overflow: this.props.currentMessage.image ? 'hidden' : 'visible'
+
+    const overflow = {
+      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'visible'
     }
 
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-        <View style={[{ flexDirection: 'row', alignItems: 'center' }, styles[this.props.position].margin]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {this.props.position === 'right' &&
-            <View style={{ marginRight: 10 }}>
+            <View style={{ marginLeft: 60, marginRight: 10 }}>
               {this.renderRetry()}
             </View>
           }
@@ -205,22 +210,22 @@ export default class Bubble extends React.PureComponent {
               this.handleBubbleToNext(),
               this.handleBubbleToPrevious(),
               backgroundColor,
-                   overflow
+              overflow
             ]}
           >
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               onPress={() => onPress(this.props.currentMessage)}
               onLongPress={this.onLongPress}
               accessibilityTraits="text"
               {...this.props.touchableProps}
             >
-              <View>
-                {this.renderCustomView()}
-                {this.renderMessageImage()}
-                {this.renderMessageVideo()}
-                {this.renderMessageText()}
-              </View>
-            </TouchableWithoutFeedback>
+              {/* <View> */}
+              {this.renderCustomView()}
+              {this.renderMessageImage()}
+              {this.renderMessageVideo()}
+              {this.renderMessageText()}
+              {/* </View> */}
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -238,6 +243,7 @@ const styles = {
     wrapper: {
       borderRadius: 15,
       backgroundColor: Color.leftBubbleBackground,
+      marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
     },
@@ -247,9 +253,6 @@ const styles = {
     containerToPrevious: {
       borderTopLeftRadius: 3,
     },
-    margin: {
-      marginRight: 60
-    }
   }),
   right: StyleSheet.create({
     container: {
@@ -269,9 +272,6 @@ const styles = {
     containerToPrevious: {
       borderTopRightRadius: 3,
     },
-    margin: {
-      marginLeft: 60
-    }
   }),
   bottom: {
     flexDirection: 'row',
@@ -286,6 +286,13 @@ const styles = {
     flexDirection: 'row',
     marginRight: 10,
   },
+  containerVideo: {
+    width: 150,
+    height: 100
+  },
+  image: {
+    flex: 1
+  }
 };
 
 Bubble.contextTypes = {
