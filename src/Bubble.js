@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image, Platform } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -85,7 +85,7 @@ export default class Bubble extends React.PureComponent {
             }
           }}
         >
-          <View>
+          <View style>
             <Video
               // controls
               ref={(ref) => this.player = ref}
@@ -104,12 +104,7 @@ export default class Bubble extends React.PureComponent {
         </TouchableWithoutFeedback>
       )
     }
-    if (this.props.currentMessage.video == '') {
-      return (
-        <View style={styles.containerVideo} />
-      )
-    }
-    return null
+    return null;
   }
 
   renderMessageText() {
@@ -192,14 +187,14 @@ export default class Bubble extends React.PureComponent {
     }
 
     const overflow = {
-      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'visible'
+      overflow: this.props.currentMessage.image ? 'hidden' : 'visible'
     }
 
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={[{ flexDirection: 'row', alignItems: 'center' }, styles[this.props.position].margin]}>
           {this.props.position === 'right' &&
-            <View style={{ marginLeft: 60, marginRight: 10 }}>
+            <View style={{ marginRight: 10 }}>
               {this.renderRetry()}
             </View>
           }
@@ -213,19 +208,19 @@ export default class Bubble extends React.PureComponent {
               overflow
             ]}
           >
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               onPress={() => onPress(this.props.currentMessage)}
               onLongPress={this.onLongPress}
               accessibilityTraits="text"
               {...this.props.touchableProps}
             >
-              {/* <View> */}
-              {this.renderCustomView()}
-              {this.renderMessageImage()}
-              {this.renderMessageVideo()}
-              {this.renderMessageText()}
-              {/* </View> */}
-            </TouchableOpacity>
+              <View>
+                {this.renderCustomView()}
+                {this.renderMessageImage()}
+                {this.renderMessageVideo()}
+                {this.renderMessageText()}
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </View>
       </View>
@@ -243,7 +238,6 @@ const styles = {
     wrapper: {
       borderRadius: 15,
       backgroundColor: Color.leftBubbleBackground,
-      marginRight: 60,
       minHeight: 20,
       justifyContent: 'flex-end',
     },
@@ -253,6 +247,9 @@ const styles = {
     containerToPrevious: {
       borderTopLeftRadius: 3,
     },
+    margin: {
+      marginRight: 60
+    }
   }),
   right: StyleSheet.create({
     container: {
@@ -272,6 +269,9 @@ const styles = {
     containerToPrevious: {
       borderTopRightRadius: 3,
     },
+    margin: {
+      marginLeft: 60
+    }
   }),
   bottom: {
     flexDirection: 'row',
