@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableOpacity } from 'react-native';
 import Lightbox from 'react-native-lightbox';
 
 const { width, height } = Dimensions.get('window')
@@ -38,15 +38,14 @@ export default function MessageImage({
   }
   return (
     <Lightbox
+      springConfig={{ tension: 900000, friction: 900000 }}
       activeProps={{
         style: styles.imageActive,
       }}
       renderContent={() => {
-        console.log(currentMessage.image)
         return (
           <Image
             {...imageProps}
-            resizeMode="contain"
             style={{
               width: width,
               height: height
@@ -65,7 +64,6 @@ export default function MessageImage({
           source={{ uri: convertToImgix(currentMessage.image, {}, 150, 100) }}
         />
       </View>
-
     </Lightbox>
   );
 }
@@ -88,8 +86,10 @@ const styles = StyleSheet.create({
     height: 30
   },
   closeHolder: {
+    width,
     position: 'absolute',
     top: 5,
+    zIndex: 100000,
     left: 5,
     width: 50,
     height: 50,
