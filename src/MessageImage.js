@@ -57,7 +57,7 @@ export default function MessageImage({
               width: width,
               height: height
             }}
-            source={{ uri: currentMessage.image }}
+            source={{ uri: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }}
           />
         )
       }}
@@ -68,7 +68,7 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          source={{ uri: convertToImgix(currentMessage.image, { width: 150, height: 100, fit: 'crop' }) }}
+          source={{ uri: convertToImgix(currentMessage.image, { w: 150, h: 100, fit: 'crop' }) }}
         />
       </View>
     </Lightbox>
