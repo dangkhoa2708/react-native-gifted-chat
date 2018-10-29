@@ -2,6 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import FastImage from 'react-native-fast-image'
 import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableOpacity, Text } from 'react-native';
 import Lightbox from 'react-native-lightbox';
 
@@ -23,7 +24,7 @@ export default function MessageImage({
     let queryString = ''
     if (queryStringArr.length > 0) {
       queryString =
-        `?${queryStringArr.join('&')}&auto=format&fit=crop&dpr=2.0&fm=jpg&q=40"`
+        `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
     } else {
       queryString =
         `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
@@ -51,11 +52,12 @@ export default function MessageImage({
         return (
           <Image
             {...imageProps}
+            resizeMode='contain'
             style={{
               width: width,
               height: height
             }}
-            source={{ uri: convertToImgix(currentMessage.image, { width }) }}
+            source={{ uri: currentMessage.image }}
           />
         )
       }}
@@ -66,7 +68,7 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          source={{ uri: convertToImgix(currentMessage.image, { width: 150, height: 100 }) }}
+          source={{ uri: convertToImgix(currentMessage.image, { width: 150, height: 100, fit: 'crop' }) }}
         />
       </View>
     </Lightbox>
