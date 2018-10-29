@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image,Platform, ActivityIndicator } from 'react-native';
+import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image, Platform, ActivityIndicator } from 'react-native';
 import Video from 'react-native-video';
 import MessageText from './MessageText';
 import MessageImage from './MessageImage';
@@ -130,6 +130,7 @@ export default class Bubble extends React.PureComponent {
   }
 
   renderMessageImage() {
+    console.log(this.props.currentMessage)
     if (this.props.currentMessage.image) {
       const { containerStyle, wrapperStyle, ...messageImageProps } = this.props;
       if (this.props.renderMessageImage) {
@@ -198,7 +199,7 @@ export default class Bubble extends React.PureComponent {
     }
 
     const overflow = {
-      overflow: this.props.currentMessage.image ? 'hidden' : 'visible'
+      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'visible'
     }
 
     return (
