@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, View, Keyboard, ViewPropTypes } from 'react-native';
+import { StyleSheet, View, Keyboard, ViewPropTypes, Platform } from 'react-native';
 
 import Composer from './Composer';
 import Send from './Send';
@@ -86,8 +86,10 @@ export default class InputToolbar extends React.Component {
       <View style={[styles.container, this.props.containerStyle, { position: this.state.position }]}>
         <View style={[styles.primary, this.props.primaryStyle]}>
           {this.renderActions()}
-          {this.renderComposer()}
-          {this.renderSend()}
+          <View style={styles.inputField}>
+            {this.renderComposer()}
+            {this.renderSend()}
+          </View>
         </View>
         {this.renderAccessory()}
       </View>
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     bottom: 0,
     left: 0,
-    right: 0,
+    right: 0
   },
   primary: {
     flexDirection: 'row',
@@ -112,6 +114,18 @@ const styles = StyleSheet.create({
   accessory: {
     height: 44,
   },
+  inputField: {
+    paddingLeft: 13,
+    paddingRight: 35,
+    paddingVertical: Platform.OS === 'ios' ? 8 : 0,
+    borderColor: '#D6D6D2',
+    borderWidth: 0.5,
+    borderRadius: 18,
+    marginRight: 16,
+    marginLeft: 5,
+    flex: 1,
+    marginBottom: 6
+  }
 });
 
 InputToolbar.defaultProps = {
@@ -122,7 +136,7 @@ InputToolbar.defaultProps = {
   containerStyle: {},
   primaryStyle: {},
   accessoryStyle: {},
-  onPressActionButton: () => {},
+  onPressActionButton: () => { },
 };
 
 InputToolbar.propTypes = {
