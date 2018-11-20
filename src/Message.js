@@ -33,10 +33,17 @@ const styles = {
   }),
 };
 
-export default class Message extends React.PureComponent {
+export default class Message extends React.Component {
 
   state = {
     showTime: false
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if ((nextProps.selectedId == this.props.currentMessage._id) || (this.props.currentMessage._id == this.props.selectedId)) {
+      return true
+    }
+    return false
   }
 
   getInnerComponentProps() {
@@ -104,6 +111,7 @@ export default class Message extends React.PureComponent {
   }
 
   render() {
+    console.log('render Message')
     const { currentMessage, nextMessage, previousMessage, inverted } = this.props
     const sameUser = isSameUser(currentMessage, nextMessage);
     return (
