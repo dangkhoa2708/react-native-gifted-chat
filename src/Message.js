@@ -111,7 +111,6 @@ export default class Message extends React.Component {
   }
 
   render() {
-    console.log('render Message')
     const { currentMessage, nextMessage, previousMessage, inverted } = this.props
     const sameUser = isSameUser(currentMessage, nextMessage);
     return (
