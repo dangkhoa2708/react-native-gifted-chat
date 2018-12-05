@@ -14,6 +14,7 @@ import { FlatList, View, StyleSheet, Keyboard, TouchableWithoutFeedback } from '
 
 import LoadEarlier from './LoadEarlier';
 import Message from './Message';
+import TouchaOutsideDismissKeyboard from './TouchOutsideDismisKeyboard'
 
 export default class MessageContainer extends React.PureComponent {
 
@@ -126,22 +127,24 @@ export default class MessageContainer extends React.PureComponent {
     return (
       // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       // <View style={styles.container}>
-      <FlatList
-        keyboardShouldPersistTaps='always'
-        ref={(ref) => (this.flatListRef = ref)}
-        keyExtractor={(item, index) => `${item._id}${index}`}
-        enableEmptySections
-        automaticallyAdjustContentInsets={false}
-        inverted={this.props.inverted}
-        data={this.props.messages}
-        style={styles.listStyle}
-        contentContainerStyle={styles.contentContainerStyle}
-        renderItem={this.renderRow}
-        {...this.props.invertibleScrollViewProps}
-        ListFooterComponent={this.renderHeaderWrapper}
-        ListHeaderComponent={this.renderFooter}
-        {...this.props.listViewProps}
-      />
+      <TouchaOutsideDismissKeyboard>
+        <FlatList
+          keyboardShouldPersistTaps='always'
+          ref={(ref) => (this.flatListRef = ref)}
+          keyExtractor={(item, index) => `${item._id}${index}`}
+          enableEmptySections
+          automaticallyAdjustContentInsets={false}
+          inverted={this.props.inverted}
+          data={this.props.messages}
+          style={styles.listStyle}
+          contentContainerStyle={styles.contentContainerStyle}
+          renderItem={this.renderRow}
+          {...this.props.invertibleScrollViewProps}
+          ListFooterComponent={this.renderHeaderWrapper}
+          ListHeaderComponent={this.renderFooter}
+          {...this.props.listViewProps}
+        />
+      </TouchaOutsideDismissKeyboard>
       // </View>
     );
   }
