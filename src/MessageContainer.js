@@ -120,6 +120,13 @@ export default class MessageContainer extends React.PureComponent {
     return <View style={styles.headerWrapper}>{this.renderLoadEarlier()}</View>;
   }
 
+  keyExtractor = (item, index) => {
+    if (index === 0) {
+      return `${item._id}${index}`
+    }
+    return `${item._id}`
+  }
+
   render() {
     if (this.props.messages.length === 0) {
       return <View style={styles.container} />;
@@ -131,7 +138,7 @@ export default class MessageContainer extends React.PureComponent {
         <FlatList
           keyboardShouldPersistTaps='always'
           ref={(ref) => (this.flatListRef = ref)}
-          keyExtractor={(item, index) => `${item._id}${index}`}
+          keyExtractor={this.keyExtractor}
           enableEmptySections
           automaticallyAdjustContentInsets={false}
           inverted={this.props.inverted}
