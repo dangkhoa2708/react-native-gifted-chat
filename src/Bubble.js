@@ -98,7 +98,7 @@ export default class Bubble extends React.PureComponent {
             />
             <Image
               source={require('./assets/images/Bitmap.png')}
-              style={{ position: 'absolute', top: 25, left: 50, width: 50, height: 50 }}
+              style={{ position: 'absolute', top: 100, left: 50, width: 100, height: 100 }}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -298,8 +298,8 @@ const styles = {
     marginRight: 10,
   },
   containerVideo: {
-    width: 150,
-    height: 100
+    width: 200,
+    height: 300
   },
   image: {
     flex: 1
