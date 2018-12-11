@@ -68,7 +68,8 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          source={{ uri: convertToImgix(currentMessage.image, { w: 150, h: 100, fit: 'crop' }) }}
+          resizeMethod="resize"
+          source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
         />
       </View>
     </Lightbox>
@@ -77,8 +78,8 @@ export default function MessageImage({
 
 const styles = StyleSheet.create({
   container: {
-    width: 150,
-    height: 100,
+    width: 200,
+    height: 300,
     backgroundColor: '#7F8284'
   },
   image: {
