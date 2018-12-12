@@ -88,8 +88,8 @@ export default class InputToolbar extends React.Component {
           {this.renderActions()}
           <View style={styles.inputField}>
             {this.renderComposer()}
-            {this.renderSend()}
           </View>
+          {this.props.text.trim().length > 0 ? this.renderSend() : this.props.renderRightAction()}
         </View>
         {this.renderAccessory()}
       </View>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     borderColor: '#D6D6D2',
     borderWidth: 0.5,
     borderRadius: 18,
-    marginRight: 16,
+    marginRight: 0,
     marginLeft: 5,
     flex: 1,
     marginBottom: 6
