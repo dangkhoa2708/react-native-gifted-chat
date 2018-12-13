@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, View, Keyboard, ViewPropTypes, Platform } from 'react-native';
+import { StyleSheet, View, Keyboard, ViewPropTypes, Platform, Animated } from 'react-native';
 
 import Composer from './Composer';
 import Send from './Send';
@@ -86,9 +86,9 @@ export default class InputToolbar extends React.Component {
       <View style={[styles.container, this.props.containerStyle, { position: this.state.position }]}>
         <View style={[styles.primary, this.props.primaryStyle]}>
           {this.renderActions()}
-          <View style={styles.inputField}>
+          <Animated.View style={[styles.inputField, this.props.inputFieldStyle]}>
             {this.renderComposer()}
-          </View>
+          </Animated.View>
           {this.props.text.trim().length > 0 ? this.renderSend() : this.props.renderRightAction()}
         </View>
         {this.renderAccessory()}
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 18,
     marginRight: 0,
-    marginLeft: 5,
     flex: 1,
     marginBottom: 6
   }
@@ -134,6 +133,7 @@ InputToolbar.defaultProps = {
   renderSend: null,
   renderComposer: null,
   containerStyle: {},
+  inputFieldStyle: {},
   primaryStyle: {},
   accessoryStyle: {},
   onPressActionButton: () => { },
@@ -146,6 +146,7 @@ InputToolbar.propTypes = {
   renderComposer: PropTypes.func,
   onPressActionButton: PropTypes.func,
   containerStyle: ViewPropTypes.style,
+  inputFieldStyle: ViewPropTypes.style,
   primaryStyle: ViewPropTypes.style,
   accessoryStyle: ViewPropTypes.style,
 };
