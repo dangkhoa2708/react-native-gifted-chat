@@ -328,6 +328,10 @@ class GiftedChat extends React.Component {
     );
   }
 
+  clearText() {
+    this.textInput.clear()
+  }
+
   onSend(messages = [], shouldResetInputToolbar = false) {
     if (!Array.isArray(messages)) {
       messages = [messages];
@@ -341,13 +345,15 @@ class GiftedChat extends React.Component {
       };
     });
 
+
+    this.props.onSend(messages);
+    this.scrollToBottom();
+
     if (shouldResetInputToolbar === true) {
       this.setIsTypingDisabled(true);
       this.resetInputToolbar();
     }
 
-    this.props.onSend(messages);
-    this.scrollToBottom();
 
     if (shouldResetInputToolbar === true) {
       setTimeout(() => {
