@@ -27,8 +27,6 @@ export default function Send({ text, containerStyle, onSend, children, textStyle
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
-    justifyContent: 'flex-end',
   },
   text: {
     color: Color.defaultBlue,
@@ -43,7 +41,7 @@ const styles = StyleSheet.create({
 
 Send.defaultProps = {
   text: '',
-  onSend: () => {},
+  onSend: () => { },
   label: 'Send',
   containerStyle: {},
   textStyle: {},
