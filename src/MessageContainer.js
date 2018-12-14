@@ -132,26 +132,32 @@ export default class MessageContainer extends React.PureComponent {
       return <View style={styles.container} />;
     }
     return (
-      <TouchaOutsideDismissKeyboard>
-        <View style={{ flex: 1 }}>
-          <FlatList
-            keyboardShouldPersistTaps='always'
-            ref={(ref) => (this.flatListRef = ref)}
-            keyExtractor={this.keyExtractor}
-            enableEmptySections
-            automaticallyAdjustContentInsets={false}
-            inverted={this.props.inverted}
-            data={this.props.messages}
-            style={styles.listStyle}
-            contentContainerStyle={styles.contentContainerStyle}
-            renderItem={this.renderRow}
-            {...this.props.invertibleScrollViewProps}
-            ListFooterComponent={this.renderHeaderWrapper}
-            ListHeaderComponent={this.renderFooter}
-            {...this.props.listViewProps}
-          />
-        </View>
-      </TouchaOutsideDismissKeyboard>
+      // <TouchaOutsideDismissKeyboard>
+      // <View style={{ flex: 1 }}
+      //   keyboardShouldPersistTaps='always'
+      // >
+      <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss()
+      }}>
+        <FlatList
+          keyboardShouldPersistTaps='always'
+          ref={(ref) => (this.flatListRef = ref)}
+          keyExtractor={this.keyExtractor}
+          enableEmptySections
+          automaticallyAdjustContentInsets={false}
+          inverted={this.props.inverted}
+          data={this.props.messages}
+          // style={styles.listStyle}
+          contentContainerStyle={styles.contentContainerStyle}
+          renderItem={this.renderRow}
+          {...this.props.invertibleScrollViewProps}
+          ListFooterComponent={this.renderHeaderWrapper}
+          ListHeaderComponent={this.renderFooter}
+          {...this.props.listViewProps}
+        />
+        {/* //   </View> */}
+        {/* // </TouchaOutsideDismissKeyboard> */}
+      </TouchableWithoutFeedback>
     );
   }
 
