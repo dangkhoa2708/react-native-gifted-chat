@@ -105,9 +105,11 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
     bottom: 0,
     left: 0,
-    right: 0
+    right: 0,
+    paddingTop: 5
   },
   primary: {
+    // marginTop: 5,
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
