@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import FastImage from 'react-native-fast-image'
-import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableOpacity, Text } from 'react-native';
+import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableOpacity, Text, StatusBar } from 'react-native';
 import Lightbox from 'react-native-lightbox';
 
 const { width, height } = Dimensions.get('window')
@@ -13,6 +13,8 @@ export default function MessageImage({
   imageProps,
   imageStyle,
   currentMessage,
+  onOpen,
+  onClose
 }) {
   const convertToImgix = (url, options = {}) => {
     if (!url) return ''
@@ -38,41 +40,46 @@ export default function MessageImage({
     return url
   }
   return (
-    <Lightbox
-      springConfig={{ tension: 900000, friction: 900000 }}
-      activeProps={{
-        style: styles.imageActive,
-      }}
-      renderHeader={close => (
-        <TouchableOpacity onPress={close} style={styles.closeHolder}>
-          <Text style={styles.closeButton}>X</Text>
-        </TouchableOpacity>
-      )}
-      renderContent={() => {
-        return (
+    <View>
+      {/* <StatusBar backgroundColor="black" /> */}
+      <Lightbox
+        onOpen={onOpen}
+        onClose={onClose}
+        springConfig={{ tension: 900000, friction: 900000 }}
+        activeProps={{
+          style: styles.imageActive,
+        }}
+        renderHeader={close => (
+          <TouchableOpacity onPress={close} style={styles.closeHolder}>
+            <Text style={styles.closeButton}>X</Text>
+          </TouchableOpacity>
+        )}
+        renderContent={() => {
+          return (
+            <Image
+              {...imageProps}
+              resizeMode='contain'
+              style={{
+                width: width,
+                height: height
+              }}
+              source={{ uri: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }}
+            />
+          )
+        }}
+        {...lightboxProps}
+      >
+        <View
+          style={[styles.container, containerStyle]}>
           <Image
             {...imageProps}
-            resizeMode='contain'
-            style={{
-              width: width,
-              height: height
-            }}
-            source={{ uri: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }}
+            style={styles.image}
+            resizeMethod="resize"
+            source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
           />
-        )
-      }}
-      {...lightboxProps}
-    >
-      <View
-        style={[styles.container, containerStyle]}>
-        <Image
-          {...imageProps}
-          style={styles.image}
-          resizeMethod="resize"
-          source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
-        />
-      </View>
-    </Lightbox>
+        </View>
+      </Lightbox>
+    </View>
   );
 }
 
@@ -90,7 +97,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   closeButton: {
-    fontSize: 20,
+    fontSize: 18,
   },
   closeHolder: {
     width: 32,
@@ -112,6 +119,8 @@ MessageImage.defaultProps = {
   imageStyle: {},
   imageProps: {},
   lightboxProps: {},
+  onOpen: () => { },
+  onClose: () => { }
 };
 
 MessageImage.propTypes = {
@@ -120,4 +129,6 @@ MessageImage.propTypes = {
   imageStyle: Image.propTypes.style,
   imageProps: PropTypes.object,
   lightboxProps: PropTypes.object,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func
 };
