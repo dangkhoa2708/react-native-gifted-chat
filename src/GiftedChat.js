@@ -30,6 +30,8 @@ import MessageContainer from './MessageContainer';
 import Send from './Send';
 import Time from './Time';
 import GiftedAvatar from './GiftedAvatar';
+import TouchaOutsideDismissKeyboard from './TouchOutsideDismisKeyboard'
+
 
 import {
   MIN_COMPOSER_HEIGHT,
@@ -38,6 +40,7 @@ import {
   TIME_FORMAT,
   DATE_FORMAT,
 } from './Constant';
+import TouchOutsideDismissKeyboard from './TouchOutsideDismisKeyboard';
 
 class GiftedChat extends React.Component {
 
@@ -304,27 +307,31 @@ class GiftedChat extends React.Component {
 
   renderMessages() {
     const {
-      onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId
+      onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId, onOpen = () => { }
     } = this.props
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
     return (
-      <AnimatedView
-        style={{
-          height: this.state.messagesContainerHeight,
-        }}
-      >
-        <MessageContainer
-          {...this.props}
-          selectedId={selectedId}
-          onBubblePress={onBubblePress}
-          onVideoPress={onVideoPress}
-          invertibleScrollViewProps={this.invertibleScrollViewProps}
-          messages={this.getMessages()}
-          ref={(component) => (this._messageContainerRef = component)}
+      <TouchOutsideDismissKeyboard>
+        <AnimatedView
+          style={{
+            height: this.state.messagesContainerHeight,
+          }}
+        >
 
-        />
-        {this.renderChatFooter()}
-      </AnimatedView>
+          <MessageContainer
+            {...this.props}
+            selectedId={selectedId}
+            onBubblePress={onBubblePress}
+            onVideoPress={onVideoPress}
+            invertibleScrollViewProps={this.invertibleScrollViewProps}
+            messages={this.getMessages()}
+            ref={(component) => (this._messageContainerRef = component)}
+
+          />
+
+          {this.renderChatFooter()}
+        </AnimatedView>
+      </TouchOutsideDismissKeyboard>
     );
   }
 
@@ -571,11 +578,13 @@ GiftedChat.defaultProps = {
   maxInputLength: null,
   forceGetKeyboardHeight: false,
   inverted: true,
+  onOpen: () => { }
 };
 
 GiftedChat.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.object),
   text: PropTypes.string,
+  onOpen: PropTypes.func,
   placeholder: PropTypes.string,
   messageIdGenerator: PropTypes.func,
   user: PropTypes.object,
