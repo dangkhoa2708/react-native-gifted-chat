@@ -14,6 +14,10 @@ export default class TouchOutsideDismissKeyboard extends PureComponent {
     children: {}
   }
 
+  state = {
+    keyboardIsShown: false
+  }
+
   componentWillMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
@@ -25,23 +29,25 @@ export default class TouchOutsideDismissKeyboard extends PureComponent {
   }
 
   onOutSidePress = () => {
-    if (this.keyboardIsShown) {
+    if (this.state.keyboardIsShown) {
       Keyboard.dismiss()
     }
   }
 
   _keyboardDidShow = () => {
-    this.keyboardIsShown = true
+    this.setState({ keyboardIsShown: true })
   }
 
   _keyboardDidHide = () => {
-    this.keyboardIsShown = false
+    this.setState({ keyboardIsShown: false })
   }
 
   render() {
     const { children } = this.props
     return (
-      <TouchableWithoutFeedback onPress={this.onOutSidePress}>
+      <TouchableWithoutFeedback
+        disabled={!this.state.keyboardIsShown}
+        onPress={this.onOutSidePress}>
         {children}
       </TouchableWithoutFeedback>
     )
