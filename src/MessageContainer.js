@@ -94,7 +94,7 @@ export default class MessageContainer extends React.PureComponent {
       }
       item.user = {};
     }
-    const { messages, onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId, ...restProps } = this.props;
+    const { messages, onBubblePress = (item) => { }, onVideoPress = (item) => { }, selectedId, onOpen = () => { }, ...restProps } = this.props;
     const previousMessage = messages[index + 1] || {};
     const nextMessage = messages[index - 1] || {};
 
@@ -107,6 +107,7 @@ export default class MessageContainer extends React.PureComponent {
       onBubblePress: onBubblePress,
       onVideoPress: onVideoPress,
       selectedId: selectedId,
+      onOpen: onOpen,
       position: item.user._id === this.props.user._id ? 'right' : 'left',
     };
 
@@ -132,32 +133,20 @@ export default class MessageContainer extends React.PureComponent {
       return <View style={styles.container} />;
     }
     return (
-      // <TouchaOutsideDismissKeyboard>
-      // <View style={{ flex: 1 }}
-      //   keyboardShouldPersistTaps='always'
-      // >
-      <TouchableWithoutFeedback onPress={() => {
-        Keyboard.dismiss()
-      }}>
-        <FlatList
-          keyboardShouldPersistTaps='always'
-          ref={(ref) => (this.flatListRef = ref)}
-          keyExtractor={this.keyExtractor}
-          enableEmptySections
-          automaticallyAdjustContentInsets={false}
-          inverted={this.props.inverted}
-          data={this.props.messages}
-          // style={styles.listStyle}
-          contentContainerStyle={styles.contentContainerStyle}
-          renderItem={this.renderRow}
-          {...this.props.invertibleScrollViewProps}
-          ListFooterComponent={this.renderHeaderWrapper}
-          ListHeaderComponent={this.renderFooter}
-          {...this.props.listViewProps}
-        />
-        {/* //   </View> */}
-        {/* // </TouchaOutsideDismissKeyboard> */}
-      </TouchableWithoutFeedback>
+      <FlatList
+        ref={(ref) => (this.flatListRef = ref)}
+        keyExtractor={this.keyExtractor}
+        enableEmptySections
+        automaticallyAdjustContentInsets={false}
+        inverted={this.props.inverted}
+        data={this.props.messages}
+        contentContainerStyle={styles.contentContainerStyle}
+        renderItem={this.renderRow}
+        {...this.props.invertibleScrollViewProps}
+        ListFooterComponent={this.renderHeaderWrapper}
+        ListHeaderComponent={this.renderFooter}
+        {...this.props.listViewProps}
+      />
     );
   }
 
