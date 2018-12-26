@@ -2,9 +2,9 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import FastImage from 'react-native-fast-image'
-import { Image, StyleSheet, View, ViewPropTypes, Dimensions, TouchableOpacity, Text, StatusBar } from 'react-native';
-import Lightbox from 'react-native-lightbox';
+import { Image, StyleSheet, SafeAreaView, ViewPropTypes, Dimensions, Modal, View, TouchableOpacity } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+
 
 const { width, height } = Dimensions.get('window')
 export default function MessageImage({
@@ -14,7 +14,9 @@ export default function MessageImage({
   imageStyle,
   currentMessage,
   onOpen,
-  onClose
+  onClose,
+  onCancel,
+  showModal
 }) {
   const convertToImgix = (url, options = {}) => {
     if (!url) return ''
@@ -41,44 +43,46 @@ export default function MessageImage({
   }
   return (
     <View>
-      {/* <StatusBar backgroundColor="black" /> */}
-      <Lightbox
-        onOpen={onOpen}
-        onClose={onClose}
-        springConfig={{ tension: 900000, friction: 900000 }}
-        activeProps={{
-          style: styles.imageActive,
-        }}
-        renderHeader={close => (
-          <TouchableOpacity onPress={close} style={styles.closeHolder}>
-            <Text style={styles.closeButton}>X</Text>
-          </TouchableOpacity>
-        )}
-        renderContent={() => {
-          return (
-            <Image
-              {...imageProps}
-              resizeMode='contain'
-              style={{
-                width: width,
-                height: height
-              }}
-              source={{ uri: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }}
-            />
-          )
-        }}
-        {...lightboxProps}
+      <Modal
+        visible={showModal} transparent={true}
       >
-        <View
-          style={[styles.container, containerStyle]}>
-          <Image
-            {...imageProps}
-            style={styles.image}
-            resizeMethod="resize"
-            source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
-          />
-        </View>
-      </Lightbox>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+          <ImageViewer
+            onCancel={onCancel}
+            enableSwipeDown
+            enableImageZoom
+            renderIndicator={() => {
+              return <View />
+            }}
+            imageUrls={[{ url: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }]} />
+
+          <TouchableOpacity
+            style={{
+              width: 40, height: 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              left: 15,
+              top: 20
+            }}
+            onPress={onCancel}>
+            <Image
+              resizeMode="contain"
+              style={{ width: 24, height: 24, tintColor: 'white' }}
+              source={require('./assets/images/ic_close.png')}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+      </Modal>
+      <View
+        style={[styles.container, containerStyle]}>
+        <Image
+          {...imageProps}
+          style={styles.image}
+          resizeMethod="resize"
+          source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
+        />
+      </View>
     </View>
   );
 }
@@ -120,7 +124,9 @@ MessageImage.defaultProps = {
   imageProps: {},
   lightboxProps: {},
   onOpen: () => { },
-  onClose: () => { }
+  onClose: () => { },
+  onCancel: () => { },
+  showModal: false
 };
 
 MessageImage.propTypes = {
@@ -130,5 +136,7 @@ MessageImage.propTypes = {
   imageProps: PropTypes.object,
   lightboxProps: PropTypes.object,
   onOpen: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  onCancel: PropTypes.func,
+  showModal: PropTypes.bool
 };
