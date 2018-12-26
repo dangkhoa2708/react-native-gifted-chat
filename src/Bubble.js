@@ -19,7 +19,8 @@ export default class Bubble extends React.PureComponent {
   }
 
   state = {
-    paused: true
+    paused: true,
+    showModal: false
   }
 
   onLongPress() {
@@ -135,7 +136,16 @@ export default class Bubble extends React.PureComponent {
       if (this.props.renderMessageImage) {
         return this.props.renderMessageImage(messageImageProps);
       }
-      return <MessageImage {...messageImageProps} />;
+      return (
+        <TouchableOpacity onPress={() => {
+          this.setState({ showModal: true })
+        }}>
+          <MessageImage
+            onCancel={() => { this.setState({ showModal: false }) }}
+            showModal={this.state.showModal}
+            {...messageImageProps} />
+        </TouchableOpacity>
+      )
     }
     return null;
   }
