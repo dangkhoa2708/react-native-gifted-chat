@@ -201,7 +201,7 @@ export default class Bubble extends React.PureComponent {
     const selected = this.props.selectedId === this.props.currentMessage._id
     const colorBackground = {
       left: selected ? '#D3D3D3' : Color.leftBubbleBackground,
-      right: selected ? '#0063FF' : Color.defaultBlue
+      right: selected ? '#C0C6CE' : Color.rightBubbleBackground
     }
     const backgroundColor = {
       backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
@@ -260,6 +260,8 @@ const styles = {
       borderRadius: 15,
       backgroundColor: Color.leftBubbleBackground,
       minHeight: 20,
+      borderWidth: 0.5,
+      borderColor: "#CECECE",
       justifyContent: 'flex-end',
     },
     containerToNext: {
