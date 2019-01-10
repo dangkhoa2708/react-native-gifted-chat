@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { StyleSheet, View, Keyboard, ViewPropTypes, Platform, Animated } from 'react-native';
+import { StyleSheet, View, Keyboard, ViewPropTypes, Platform, Animated, Text } from 'react-native';
 
 import Composer from './Composer';
 import Send from './Send';
@@ -83,13 +83,13 @@ export default class InputToolbar extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.containerStyle]}>
+      <View style={[styles.container, this.props.containerStyle, {}]}>
         <View style={[styles.primary, this.props.primaryStyle]}>
           {this.renderActions()}
-          <Animated.View style={[styles.inputField, this.props.inputFieldStyle]}>
+          <View style={[styles.inputField, this.props.inputFieldStyle]}>
             {this.renderComposer()}
-          </Animated.View>
-          {this.props.text.trim().length > 0 ? this.renderSend() : this.props.renderRightAction()}
+          </View>
+          {this.props.showSend ? this.renderSend() : this.props.renderRightAction()}
         </View>
         {this.renderAccessory()}
       </View>
@@ -100,32 +100,32 @@ export default class InputToolbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: Color.defaultColor,
+    // borderTopWidth: StyleSheet.hairlineWidth,
+    // borderTopColor: Color.defaultColor,
     backgroundColor: Color.white,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingTop: 5
+    bottom: 10,
+    // left: 10,
+    // right: 10,
+    paddingHorizontal: 10,
   },
   primary: {
-    // marginTop: 5,
+    marginTop: 5,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#CECECE'
   },
   accessory: {
     height: 44,
   },
   inputField: {
-    paddingLeft: 13,
-    paddingRight: 35,
-    paddingVertical: Platform.OS === 'ios' ? 8 : 0,
-    borderColor: '#D6D6D2',
-    borderWidth: 0.5,
-    borderRadius: 18,
+    // paddingLeft: 13,
+    paddingRight: 15,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 0,
     marginRight: 0,
     flex: 1,
-    marginBottom: 6
   }
 });
 
@@ -136,6 +136,7 @@ InputToolbar.defaultProps = {
   renderComposer: null,
   containerStyle: {},
   inputFieldStyle: {},
+  showSend: false,
   primaryStyle: {},
   accessoryStyle: {},
   onPressActionButton: () => { },
@@ -151,4 +152,5 @@ InputToolbar.propTypes = {
   inputFieldStyle: ViewPropTypes.style,
   primaryStyle: ViewPropTypes.style,
   accessoryStyle: ViewPropTypes.style,
+  showSend: PropTypes.bool,
 };
