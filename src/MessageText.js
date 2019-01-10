@@ -115,11 +115,11 @@ const styles = {
   right: StyleSheet.create({
     container: {},
     text: {
-      color: 'white',
+      color: 'black',
       ...textStyle,
     },
     link: {
-      color: 'white',
+      color: 'black',
       textDecorationLine: 'underline',
     },
   }),
