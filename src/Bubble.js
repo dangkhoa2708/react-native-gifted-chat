@@ -141,7 +141,10 @@ export default class Bubble extends React.PureComponent {
           this.setState({ showModal: true })
         }}>
           <MessageImage
-            onCancel={() => { this.setState({ showModal: false }) }}
+            onCancel={(func) => {
+              func()
+              this.setState({ showModal: false })
+            }}
             showModal={this.state.showModal}
             {...messageImageProps} />
         </TouchableOpacity>
