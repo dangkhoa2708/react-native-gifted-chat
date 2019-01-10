@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Image, StyleSheet, SafeAreaView, ViewPropTypes, Dimensions, Modal, View, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, SafeAreaView, ViewPropTypes, Dimensions, Modal, View, TouchableOpacity, Platform } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 
@@ -44,11 +44,16 @@ export default function MessageImage({
   return (
     <View>
       <Modal
-        visible={showModal} transparent={true}
+        onShow={onOpen}
+        onRequestClose={() => {
+          onCancel(onClose)
+        }}
+        visible={showModal}
+        transparent={true}
       >
         <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
           <ImageViewer
-            onCancel={onCancel}
+            onCancel={() => onCancel(onClose)}
             enableSwipeDown
             enableImageZoom
             renderIndicator={() => {
@@ -65,7 +70,7 @@ export default function MessageImage({
               left: 15,
               top: 20
             }}
-            onPress={onCancel}>
+            onPress={() => onCancel(onClose)}>
             <Image
               resizeMode="contain"
               style={{ width: 24, height: 24, tintColor: 'white' }}
