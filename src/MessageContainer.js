@@ -134,10 +134,11 @@ export default class MessageContainer extends React.PureComponent {
     }
     return (
       <FlatList
+        style={{ marginBottom: 8 }}
         ref={(ref) => (this.flatListRef = ref)}
         keyExtractor={this.keyExtractor}
         enableEmptySections
-        automaticallyAdjustContentInsets={false}
+        // automaticallyAdjustContentInsets={false}
         inverted={this.props.inverted}
         data={this.props.messages}
         contentContainerStyle={styles.contentContainerStyle}
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainerStyle: {
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   headerWrapper: {
     flex: 1,
