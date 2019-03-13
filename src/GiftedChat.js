@@ -524,6 +524,8 @@ GiftedChat.childContextTypes = {
 };
 
 GiftedChat.defaultProps = {
+  isSeen: false,
+  isTyping: false,
   messages: [],
   text: undefined,
   placeholder: DEFAULT_PLACEHOLDER,
@@ -578,10 +580,14 @@ GiftedChat.defaultProps = {
   maxInputLength: null,
   forceGetKeyboardHeight: false,
   inverted: true,
+  styleSeenText: {},
   onOpen: () => { }
 };
 
 GiftedChat.propTypes = {
+  styleSeenText: PropTypes.object,
+  isSeen: PropTypes.bool,
+  isTyping: PropTypes.bool,
   messages: PropTypes.arrayOf(PropTypes.object),
   text: PropTypes.string,
   onOpen: PropTypes.func,
