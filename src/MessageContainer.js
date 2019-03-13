@@ -14,6 +14,7 @@ import { FlatList, View, StyleSheet, Keyboard, TouchableWithoutFeedback } from '
 
 import LoadEarlier from './LoadEarlier';
 import Message from './Message';
+import Seen from './Seen'
 import TouchaOutsideDismissKeyboard from './TouchOutsideDismisKeyboard'
 
 export default class MessageContainer extends React.PureComponent {
@@ -56,13 +57,14 @@ export default class MessageContainer extends React.PureComponent {
   }
 
   renderFooter() {
-    if (this.props.renderFooter) {
-      const footerProps = {
-        ...this.props,
-      };
-      return this.props.renderFooter(footerProps);
-    }
-    return null;
+    // if (this.props.renderFooter) {
+    //   const footerProps = {
+    //     ...this.props,
+    //   };
+    //   return this.props.renderFooter(footerProps);
+    // }
+    // return null;
+    return this.renderSeen()
   }
 
   renderLoadEarlier() {
@@ -76,6 +78,14 @@ export default class MessageContainer extends React.PureComponent {
       return <LoadEarlier {...loadEarlierProps} />;
     }
     return null;
+  }
+
+
+  renderSeen() {
+    const seenProps = {
+      ...this.props
+    }
+    return <Seen {...seenProps} />
   }
 
   scrollTo(options) {
