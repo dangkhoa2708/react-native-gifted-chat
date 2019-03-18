@@ -581,10 +581,14 @@ GiftedChat.defaultProps = {
   forceGetKeyboardHeight: false,
   inverted: true,
   styleSeenText: {},
-  onOpen: () => { }
+  onOpen: () => { },
+  avatarSeen: '',
+  seenId: ''
 };
 
 GiftedChat.propTypes = {
+  seenId: PropTypes.string,
+  avatarSeen: PropTypes.string,
   styleSeenText: PropTypes.object,
   isSeen: PropTypes.bool,
   isTyping: PropTypes.bool,
