@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, ViewPropTypes, StyleSheet } from 'react-native';
+import { View, ViewPropTypes, StyleSheet, Image } from 'react-native';
 
 import Avatar from './Avatar';
 import Bubble from './Bubble';
@@ -28,7 +28,7 @@ const styles = {
       alignItems: 'flex-end',
       justifyContent: 'flex-end',
       marginLeft: 0,
-      marginRight: 8,
+      marginRight: 0,
     },
   }),
 };
@@ -40,7 +40,9 @@ export default class Message extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if ((nextProps.selectedId == this.props.currentMessage._id) || (this.props.currentMessage._id == this.props.selectedId)) {
+    if ((nextProps.selectedId == this.props.currentMessage._id)
+      || (this.props.currentMessage._id == this.props.selectedId)
+      || (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId)) {
       return true
     }
     return false
@@ -98,6 +100,31 @@ export default class Message extends React.Component {
     return <SystemMessage {...systemMessageProps} />;
   }
 
+  renderAvatarSeen = () => {
+    console.log('renderAvatarSeen:', this.props.currentMessage._id == this.props.seenId)
+    if (this.props.currentMessage._id == this.props.seenId) {
+      return (
+        <Image
+          source={{ uri: this.props.avatarSeen }}
+          style={{
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            marginHorizontal: 3
+          }}
+        />
+      )
+    }
+    return (
+      <View
+        style={{
+          width: 18,
+          marginHorizontal: 3
+        }}
+      />
+    )
+  }
+
   renderAvatar() {
     if (this.props.user._id === this.props.currentMessage.user._id && !this.props.showUserAvatar) {
       return null;
@@ -137,6 +164,7 @@ export default class Message extends React.Component {
                 {this.props.position === 'left' ? this.renderAvatar() : null}
                 {this.renderBubble()}
                 {this.props.position === 'right' ? this.renderAvatar() : null}
+                {this.renderAvatarSeen()}
               </View>
             </View>
           )
