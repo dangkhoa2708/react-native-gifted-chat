@@ -16,7 +16,8 @@ export default function MessageImage({
   onOpen,
   onClose,
   onCancel,
-  showModal
+  showModal,
+  connectionID
 }) {
   const convertToImgix = (url, options = {}) => {
     if (!url) return ''
@@ -59,7 +60,18 @@ export default function MessageImage({
             renderIndicator={() => {
               return <View />
             }}
-            imageUrls={[{ url: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }) }]} />
+            imageUrls={[{
+              width: width,
+              height: height,
+              url: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }),
+              props: {
+                source: {
+                  headers: {
+                    connectionID: connectionID
+                  }
+                }
+              }
+            }]} />
 
           <TouchableOpacity
             style={{
@@ -85,7 +97,12 @@ export default function MessageImage({
           {...imageProps}
           style={styles.image}
           resizeMethod="resize"
-          source={{ uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }) }}
+          source={{
+            uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }),
+            headers: {
+              connectionID: connectionID
+            }
+          }}
         />
       </View>
     </View>
