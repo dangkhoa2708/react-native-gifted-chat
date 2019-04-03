@@ -12,7 +12,6 @@ export default class Seen extends Component {
         return false
     }
     render() {
-        console.log('runnnn')
         if (this.props.isSeen) {
             return (
                 <View style={styles.viewSeen}>
@@ -21,7 +20,10 @@ export default class Seen extends Component {
             )
         }
         if (this.props.isTyping) {
-            return <Image style={styles.imgTyping} source={require('./assets/images/img_typing.png')} />
+            return <Image
+                resizeMode="contain"
+                style={styles.imgTyping}
+                source={{ uri: 'https://support.signal.org/hc/article_attachments/360016877511/typing-animation-3x.gif' }} />
         }
         return null
     }
@@ -35,7 +37,9 @@ const styles = StyleSheet.create({
     },
     imgTyping: {
         marginLeft: 13,
-        marginBottom: 12
+        // marginBottom: 12,
+        width: 50,
+        height: 40
     },
     viewSeen: {
         alignItems: 'flex-end',
