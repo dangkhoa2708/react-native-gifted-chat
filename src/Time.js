@@ -16,9 +16,7 @@ export default function Time(
   return (
     <View style={[styles[position].container, containerStyle[position]]}>
       <Text style={[styles[position].text, textStyle[position], timeTextStyle[position]]}>
-        {moment(currentMessage.createdAt)
-          .locale(context.getLocale())
-          .format(timeFormat)}
+        {moment.utc(currentMessage.createdAt, timeFormat).local().format(timeFormat)}
       </Text>
     </View>
   );
