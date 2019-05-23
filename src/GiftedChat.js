@@ -525,6 +525,8 @@ GiftedChat.childContextTypes = {
 
 GiftedChat.defaultProps = {
   isSeen: false,
+  arrSeenMsg: [],
+  roomType: '',
   isTyping: false,
   messages: [],
   text: undefined,
@@ -587,6 +589,8 @@ GiftedChat.defaultProps = {
 };
 
 GiftedChat.propTypes = {
+  arrSeenMsg: PropTypes.array,
+  roomType: PropTypes.string,
   seenId: PropTypes.string,
   avatarSeen: PropTypes.string,
   styleSeenText: PropTypes.object,
