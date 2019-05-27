@@ -42,7 +42,9 @@ export default class Message extends React.Component {
   shouldComponentUpdate(nextProps) {
     if ((nextProps.selectedId == this.props.currentMessage._id)
       || (this.props.currentMessage._id == this.props.selectedId)
-      || (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId)) {
+      || (this.props.roomType == 'group' && (this.props.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id) || nextProps.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id)))
+      || (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId))) {
+
       return true
     }
     return false
@@ -100,8 +102,67 @@ export default class Message extends React.Component {
     return <SystemMessage {...systemMessageProps} />;
   }
 
+  convertToImgix = (url, options = {}) => {
+    if (!url) return ''
+    const queryStringArr = []
+    for (const key of Object.keys(options)) {
+      queryStringArr.push(`${key}=${options[key]}`)
+    }
+
+    let queryString = ''
+    if (queryStringArr.length > 0) {
+      queryString =
+        `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
+    } else {
+      queryString =
+        `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
+    }
+    url = url
+      .replace(
+        'https://skylabchat.s3.ap-south-1.amazonaws.com/',
+        'http://messageinternal.imgix.net/'
+      ) + queryString
+
+    return url
+  }
+
+  renderArrSeen = () => {
+    if (this.props.roomType == 'group') {
+      return (
+        <View style={{
+          alignSelf: 'flex-end',
+          flexDirection: 'row'
+        }}>
+          {this.renderArrSeenAvatar()}
+        </View>
+      )
+    }
+  }
+
+  renderArrSeenAvatar = () => {
+    return this.props.arrSeenMsg.map((e) => {
+      if (this.props.currentMessage._id == e.msg_id) {
+        const avatar = e.avatar ? { url: this.convertToImgix(e.avatar, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
+        return (
+          <Image
+            key={`${e.user_id}`}
+            source={avatar}
+            style={{
+              width: 18,
+              height: 18,
+              borderRadius: 9,
+              marginRight: 5,
+              marginBottom: 10
+            }}
+          />
+        )
+      } else {
+        return null
+      }
+    })
+  }
+
   renderAvatarSeen = () => {
-    console.log('renderAvatarSeen:', this.props.currentMessage._id == this.props.seenId)
     if (this.props.currentMessage._id == this.props.seenId) {
       return (
         <Image
@@ -164,8 +225,10 @@ export default class Message extends React.Component {
                 {this.props.position === 'left' ? this.renderAvatar() : null}
                 {this.renderBubble()}
                 {this.props.position === 'right' ? this.renderAvatar() : null}
-                {this.renderAvatarSeen()}
+                {this.props.roomType == 'private' && this.renderAvatarSeen()}
               </View>
+
+              {this.renderArrSeen()}
             </View>
           )
         }
