@@ -163,7 +163,7 @@ export default class Message extends React.Component {
   }
 
   renderAvatarSeen = () => {
-    if (this.props.currentMessage._id == this.props.seenId) {
+    if (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId)) {
       return (
         <Image
           source={{ uri: this.props.avatarSeen }}
@@ -225,7 +225,7 @@ export default class Message extends React.Component {
                 {this.props.position === 'left' ? this.renderAvatar() : null}
                 {this.renderBubble()}
                 {this.props.position === 'right' ? this.renderAvatar() : null}
-                {this.props.roomType == 'private' && this.renderAvatarSeen()}
+                {this.renderAvatarSeen()}
               </View>
 
               {this.renderArrSeen()}
