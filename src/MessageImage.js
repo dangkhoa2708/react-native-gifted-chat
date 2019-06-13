@@ -25,22 +25,7 @@ export default function MessageImage({
     for (const key of Object.keys(options)) {
       queryStringArr.push(`${key}=${options[key]}`)
     }
-
-    let queryString = ''
-    if (queryStringArr.length > 0) {
-      queryString =
-        `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
-    } else {
-      queryString =
-        `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
-    }
-    url = url
-      .replace(
-        'https://skylabchat.s3.ap-south-1.amazonaws.com/',
-        'http://messageinternal.imgix.net/'
-      ) + queryString
-
-    return url
+    return url + `?${queryStringArr.join('&')}`
   }
   return (
     <View>
@@ -63,8 +48,9 @@ export default function MessageImage({
             imageUrls={[{
               width: width,
               height: height,
-              url: convertToImgix(currentMessage.image, { w: width, fit: 'fill' }),
+              url: currentMessage.image,
               props: {
+                resizeMode: "contain",
                 source: {
                   headers: {
                     connectionID: connectionID
@@ -96,9 +82,9 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          resizeMethod="resize"
+          resizeMode="contain"
           source={{
-            uri: convertToImgix(currentMessage.image, { w: 200, h: 300, fit: 'crop' }),
+            uri: convertToImgix(currentMessage.image, { w: 200, h: 200 }),
             headers: {
               connectionID: connectionID
             }
@@ -112,7 +98,7 @@ export default function MessageImage({
 const styles = StyleSheet.create({
   container: {
     width: 200,
-    height: 300,
+    height: 200,
     backgroundColor: '#7F8284'
   },
   image: {
