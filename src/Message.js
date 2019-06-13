@@ -103,25 +103,25 @@ export default class Message extends React.Component {
   }
 
   convertToImgix = (url, options = {}) => {
-    if (!url) return ''
-    const queryStringArr = []
-    for (const key of Object.keys(options)) {
-      queryStringArr.push(`${key}=${options[key]}`)
-    }
+    // if (!url) return ''
+    // const queryStringArr = []
+    // for (const key of Object.keys(options)) {
+    //   queryStringArr.push(`${key}=${options[key]}`)
+    // }
 
-    let queryString = ''
-    if (queryStringArr.length > 0) {
-      queryString =
-        `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
-    } else {
-      queryString =
-        `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
-    }
-    url = url
-      .replace(
-        'https://skylabchat.s3.ap-south-1.amazonaws.com/',
-        'http://messageinternal.imgix.net/'
-      ) + queryString
+    // let queryString = ''
+    // if (queryStringArr.length > 0) {
+    //   queryString =
+    //     `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
+    // } else {
+    //   queryString =
+    //     `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
+    // }
+    // url = url
+    //   .replace(
+    //     'https://skylabchat.s3.ap-south-1.amazonaws.com/',
+    //     'http://messageinternal.imgix.net/'
+    //   ) + queryString
 
     return url
   }
