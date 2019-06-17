@@ -9,6 +9,7 @@ import Bubble from './Bubble';
 import SystemMessage from './SystemMessage';
 import Day from './Day';
 import Time from './Time';
+import Statement from './Statement'
 
 import { isSameUser, isSameDay } from './utils';
 
@@ -100,6 +101,11 @@ export default class Message extends React.Component {
       return this.props.renderSystemMessage(systemMessageProps);
     }
     return <SystemMessage {...systemMessageProps} />;
+  }
+
+  renderStatement() {
+    const message = this.props.currentMessage.text
+    return <Statement message={message} />
   }
 
   convertToImgix = (url, options = {}) => {
@@ -207,30 +213,33 @@ export default class Message extends React.Component {
         {currentMessage.system ? (
           this.renderSystemMessage()
         ) : (
-            <View>
-              {this.props.selectedId === this.props.currentMessage._id &&
-                isSameDay(currentMessage, inverted ? previousMessage : nextMessage) &&
-                < View style={{ alignItems: 'center' }}>
-                  {this.renderTime()}
-                </View>
-              }
-              <View
-                style={[
-                  styles[this.props.position].container,
-                  { marginBottom: sameUser ? 2 : 10 },
-                  !this.props.inverted && { marginBottom: 2 },
-                  this.props.containerStyle[this.props.position],
-                ]}
-              >
-                {this.props.position === 'left' ? this.renderAvatar() : null}
-                {this.renderBubble()}
-                {this.props.position === 'right' ? this.renderAvatar() : null}
-                {this.renderAvatarSeen()}
-              </View>
+            currentMessage.type == 'statement'
+              ? this.renderStatement()
+              : (
+                <View>
+                  {this.props.selectedId === this.props.currentMessage._id &&
+                    isSameDay(currentMessage, inverted ? previousMessage : nextMessage) &&
+                    < View style={{ alignItems: 'center' }}>
+                      {this.renderTime()}
+                    </View>
+                  }
+                  <View
+                    style={[
+                      styles[this.props.position].container,
+                      { marginBottom: sameUser ? 2 : 10 },
+                      !this.props.inverted && { marginBottom: 2 },
+                      this.props.containerStyle[this.props.position],
+                    ]}
+                  >
+                    {this.props.position === 'left' ? this.renderAvatar() : null}
+                    {this.renderBubble()}
+                    {this.props.position === 'right' ? this.renderAvatar() : null}
+                    {this.renderAvatarSeen()}
+                  </View>
 
-              {this.renderArrSeen()}
-            </View>
-          )
+                  {this.renderArrSeen()}
+                </View>
+              ))
         }
       </View>
     );
