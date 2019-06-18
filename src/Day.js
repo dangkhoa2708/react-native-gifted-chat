@@ -19,7 +19,7 @@ export default function Day(
       <View style={[styles.container, containerStyle]}>
         <View style={wrapperStyle}>
           <Text style={[styles.text, textStyle]}>
-            {moment(moment.utc(currentMessage.createdAt).toDate())
+            {moment(moment.utc(currentMessage.createdAt * 1000).toDate())
               .local()
               .format(dateFormat)
               .toUpperCase()}
