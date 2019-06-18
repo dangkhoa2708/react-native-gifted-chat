@@ -5,8 +5,8 @@ export function isSameDay(currentMessage = {}, diffMessage = {}) {
     return false;
   }
 
-  const currentCreatedAt = moment(currentMessage.createdAt);
-  const diffCreatedAt = moment(diffMessage.createdAt);
+  const currentCreatedAt = moment(currentMessage.createdAt * 1000);
+  const diffCreatedAt = moment(diffMessage.createdAt * 1000);
 
   if (!currentCreatedAt.isValid() || !diffCreatedAt.isValid()) {
     return false;
