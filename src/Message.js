@@ -105,7 +105,12 @@ export default class Message extends React.Component {
 
   renderStatement() {
     const message = this.props.currentMessage.text
-    return <Statement message={message} />
+    return (
+      <View>
+        < Statement message={message} />
+        {this.renderArrSeen()}
+      </View>
+    )
   }
 
   convertToImgix = (url, options = {}) => {
