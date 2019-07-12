@@ -82,7 +82,7 @@ export default function MessageImage({
         <Image
           {...imageProps}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
           source={{
             uri: convertToImgix(currentMessage.image, { w: 200, h: 200 }),
             headers: {
