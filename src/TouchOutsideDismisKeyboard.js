@@ -18,7 +18,7 @@ export default class TouchOutsideDismissKeyboard extends PureComponent {
     keyboardIsShown: false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
   }
