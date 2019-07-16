@@ -34,7 +34,7 @@ export default class MessageContainer extends React.PureComponent {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.messages.length === 0 && nextProps.messages.length > 0) {
       this.detatchKeyboardListeners();
     } else if (this.props.messages.length > 0 && nextProps.messages.length === 0) {
