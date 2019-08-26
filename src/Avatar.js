@@ -44,6 +44,7 @@ export default class Avatar extends React.PureComponent {
     }
     return (
       <GiftedAvatar
+        {...this.props}
         avatarStyle={StyleSheet.flatten([
           styles[this.props.position].image,
           this.props.imageStyle[this.props.position],
@@ -106,7 +107,7 @@ Avatar.defaultProps = {
   nextMessage: {},
   containerStyle: {},
   imageStyle: {},
-  onPressAvatar: () => {},
+  onPressAvatar: () => { },
 };
 
 Avatar.propTypes = {
