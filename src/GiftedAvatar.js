@@ -11,6 +11,17 @@ const { carrot, emerald, peterRiver, wisteria, alizarin, turquoise, midnightBlue
 // handle only alpha numeric chars
 
 export default class GiftedAvatar extends React.PureComponent {
+  getImageWithOptions = (url, options = {}) => {
+    if (!url) return ''
+    const queryStringArr = []
+    const keys = Object.keys(options)
+    keys.forEach((item) => {
+      queryStringArr.push(`${item}=${options[item]}`)
+    })
+
+    return `${url}?${queryStringArr.join('&')}`
+  }
+
   setAvatarColor() {
     const userName = this.props.user.name || '';
     const name = userName.toUpperCase().split(' ');
@@ -35,12 +46,24 @@ export default class GiftedAvatar extends React.PureComponent {
   }
 
   renderAvatar() {
+
+    if (this.props.roomType == 'business' && !this.props.openFromBusinessSide) {
+      const avatar = this.props.businessInfo.avatar ? { uri: this.getImageWithOptions(this.props.businessInfo.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
+      return (
+        <Image
+          source={avatar}
+          style={[styles.avatarStyle, this.props.avatarStyle]}
+        />
+      );
+    }
     if (typeof this.props.user.avatar === 'function') {
       return this.props.user.avatar();
     } else if (typeof this.props.user.avatar === 'string') {
+      const avatar = this.props.user.avatar ? { uri: this.getImageWithOptions(this.props.user.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
+      console.log(avatar)
       return (
         <Image
-          source={{ uri: this.props.user.avatar }}
+          source={avatar}
           style={[styles.avatarStyle, this.props.avatarStyle]}
         />
       );
@@ -52,7 +75,7 @@ export default class GiftedAvatar extends React.PureComponent {
         />
       );
     }
-    return null;
+    return <View style={[styles.avatarStyle, this.props.avatarStyle]} />;
   }
 
   renderInitials() {
@@ -60,34 +83,16 @@ export default class GiftedAvatar extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.user.name && !this.props.user.avatar) {
-      // render placeholder
-      return (
-        <View
-          style={[styles.avatarStyle, styles.avatarTransparent, this.props.avatarStyle]}
-          accessibilityTraits="image"
-        />
-      );
-    }
-    if (this.props.user.avatar) {
-      return (
-        <TouchableOpacity
-          disabled={!this.props.onPress}
-          onPress={() => {
-            const { onPress, ...other } = this.props;
-            if (this.props.onPress) {
-              this.props.onPress(other);
-            }
-          }}
-          accessibilityTraits="image"
-        >
-          {this.renderAvatar()}
-        </TouchableOpacity>
-      );
-    }
-
-    this.setAvatarColor();
-
+    // if (!this.props.user.name && !this.props.user.avatar) {
+    //   // render placeholder
+    //   return (
+    //     <View
+    //       style={[styles.avatarStyle, styles.avatarTransparent, this.props.avatarStyle]}
+    //       accessibilityTraits="image"
+    //     />
+    //   );
+    // }
+    // if (this.props.user.avatar) {
     return (
       <TouchableOpacity
         disabled={!this.props.onPress}
@@ -97,12 +102,30 @@ export default class GiftedAvatar extends React.PureComponent {
             this.props.onPress(other);
           }
         }}
-        style={[styles.avatarStyle, { backgroundColor: this.avatarColor }, this.props.avatarStyle]}
         accessibilityTraits="image"
       >
-        {this.renderInitials()}
+        {this.renderAvatar()}
       </TouchableOpacity>
     );
+    // }
+
+    // this.setAvatarColor();
+
+    // return (
+    //   <TouchableOpacity
+    //     disabled={!this.props.onPress}
+    //     onPress={() => {
+    //       const { onPress, ...other } = this.props;
+    //       if (this.props.onPress) {
+    //         this.props.onPress(other);
+    //       }
+    //     }}
+    //     style={[styles.avatarStyle, { backgroundColor: this.avatarColor }, this.props.avatarStyle]}
+    //     accessibilityTraits="image"
+    //   >
+    //     {/* {this.renderInitials()} */}
+    //   </TouchableOpacity>
+    // );
   }
 }
 
