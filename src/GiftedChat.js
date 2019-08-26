@@ -105,7 +105,7 @@ class GiftedChat extends React.Component {
     };
   }
 
-   UNSAFE_componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { messages, text } = this.props;
     this.setIsMounted(true);
     this.initLocale();
@@ -117,7 +117,7 @@ class GiftedChat extends React.Component {
     this.setIsMounted(false);
   }
 
-   UNSAFE_componentWillReceiveProps(nextProps = {}) {
+  UNSAFE_componentWillReceiveProps(nextProps = {}) {
     const { messages, text } = nextProps;
     this.setMessages(messages || []);
     this.setTextFromProp(text);
@@ -585,10 +585,16 @@ GiftedChat.defaultProps = {
   styleSeenText: {},
   onOpen: () => { },
   avatarSeen: '',
-  seenId: ''
+  seenId: '',
+  openFromBusinessSide: false,
+  businessInfo: {},
+  customerInfo: {}
 };
 
 GiftedChat.propTypes = {
+  openFromBusinessSide: PropTypes.bool,
+  businessInfo: PropTypes.object,
+  customerInfo: PropTypes.object,
   arrSeenMsg: PropTypes.array,
   roomType: PropTypes.string,
   seenId: PropTypes.string,
