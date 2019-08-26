@@ -2,9 +2,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { View, ViewPropTypes, StyleSheet, Image } from 'react-native';
+import { View, ViewPropTypes, StyleSheet, Image, Text } from 'react-native';
 
 import Avatar from './Avatar';
+import Color from './Color';
 import Bubble from './Bubble';
 import SystemMessage from './SystemMessage';
 import Day from './Day';
@@ -212,6 +213,8 @@ export default class Message extends React.Component {
   render() {
     const { currentMessage, nextMessage, previousMessage, inverted } = this.props
     const sameUser = isSameUser(currentMessage, nextMessage);
+    const sameUser2 = isSameUser(currentMessage, previousMessage);
+    const color = this.props.customerInfo.id == this.props.currentMessage.user._id ? Color.defaultBlue : Color.defaultColor
     return (
       <View>
         {this.renderDay()}
@@ -228,6 +231,13 @@ export default class Message extends React.Component {
                       {this.renderTime()}
                     </View>
                   }
+                  {(this.props.position === 'left' && !sameUser2 && this.props.roomType != 'private') && < Text style={{
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: '500',
+                    marginBottom: 4,
+                    marginLeft: 50
+                  }}> {this.props.currentMessage.user.name}</Text>}
                   <View
                     style={[
                       styles[this.props.position].container,
