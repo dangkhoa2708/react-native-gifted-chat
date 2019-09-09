@@ -44,7 +44,7 @@ export default class Message extends React.Component {
   shouldComponentUpdate(nextProps) {
     if ((nextProps.selectedId == this.props.currentMessage._id)
       || (this.props.currentMessage._id == this.props.selectedId)
-      || (this.props.roomType == 'group' && (this.props.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id) || nextProps.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id)))
+      || (this.props.roomType != 'private' && (this.props.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id) || nextProps.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id)))
       || (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId))) {
 
       return true
@@ -139,7 +139,7 @@ export default class Message extends React.Component {
   }
 
   renderArrSeen = () => {
-    if (this.props.roomType == 'group') {
+    if (this.props.roomType != 'private') {
       return (
         <View style={{
           alignSelf: 'flex-end',
@@ -154,7 +154,13 @@ export default class Message extends React.Component {
   renderArrSeenAvatar = () => {
     return this.props.arrSeenMsg.map((e) => {
       if (this.props.currentMessage._id == e.msg_id) {
-        const avatar = e.avatar ? { url: this.convertToImgix(e.avatar, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
+        let avatarSource = null
+        if (this.props.roomType == 'business' && !this.props.openFromBusinessSide) {
+          avatarSource = this.props.businessInfo.avatar
+        } else {
+          avatarSource = e.avatar
+        }
+        const avatar = avatarSource ? { url: this.convertToImgix(avatarSource, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
         return (
           <Image
             key={`${e.user_id}`}
@@ -176,9 +182,10 @@ export default class Message extends React.Component {
 
   renderAvatarSeen = () => {
     if (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId)) {
+      const source = this.props.avatarSeen != '' ? { uri: this.props.avatarSeen } : require('./assets/images/img_placeholder.png')
       return (
         <Image
-          source={{ uri: this.props.avatarSeen }}
+          source={source}
           style={{
             width: 18,
             height: 18,
