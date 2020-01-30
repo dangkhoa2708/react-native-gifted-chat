@@ -84,7 +84,7 @@ export default function MessageImage({
           style={styles.image}
           resizeMode="cover"
           source={{
-            uri: convertToImgix(currentMessage.image, { w: 200, h: 200 }),
+            uri: convertToImgix(currentMessage.image, { w: 400, h: 400 }),
             headers: {
               connectionID: connectionID
             }
