@@ -1,6 +1,6 @@
 /* eslint react-native/no-inline-styles: 0 */
 
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import React from 'react';
 import { View, ViewPropTypes, StyleSheet, Image, Text } from 'react-native';
 
@@ -160,7 +160,7 @@ export default class Message extends React.Component {
         } else {
           avatarSource = e.avatar
         }
-        const avatar = avatarSource ? { url: this.convertToImgix(avatarSource, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
+        const avatar = avatarSource ? { url: this.props.imgURL + this.convertToImgix(avatarSource, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
         return (
           <Image
             key={`${e.user_id}`}
@@ -182,7 +182,7 @@ export default class Message extends React.Component {
 
   renderAvatarSeen = () => {
     if (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId)) {
-      const source = this.props.avatarSeen != '' ? { uri: this.props.avatarSeen } : require('./assets/images/img_placeholder.png')
+      const source = this.props.avatarSeen != '' ? { uri: this.props.imgURL + this.props.avatarSeen } : require('./assets/images/img_placeholder.png')
       return (
         <Image
           source={source}
@@ -282,6 +282,7 @@ Message.defaultProps = {
   containerStyle: {},
   showUserAvatar: true,
   inverted: true,
+  imgURL: string
 };
 
 Message.propTypes = {
@@ -300,4 +301,5 @@ Message.propTypes = {
     left: ViewPropTypes.style,
     right: ViewPropTypes.style,
   }),
+  imgURL: PropTypes.string
 };
