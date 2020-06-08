@@ -48,7 +48,7 @@ export default class GiftedAvatar extends React.PureComponent {
   renderAvatar() {
 
     if (this.props.roomType == 'business' && !this.props.openFromBusinessSide) {
-      const avatar = this.props.businessInfo.avatar ? { uri: this.getImageWithOptions(this.props.businessInfo.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
+      const avatar = this.props.businessInfo.avatar ? { uri: this.props.imgURL+ this.getImageWithOptions(this.props.businessInfo.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
       return (
         <Image
           source={avatar}
@@ -59,7 +59,7 @@ export default class GiftedAvatar extends React.PureComponent {
     if (typeof this.props.user.avatar === 'function') {
       return this.props.user.avatar();
     } else if (typeof this.props.user.avatar === 'string') {
-      const avatar = this.props.user.avatar ? { uri: this.getImageWithOptions(this.props.user.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
+      const avatar = this.props.user.avatar ? { uri: this.props.imgURL + this.getImageWithOptions(this.props.user.avatar, { w: 50, h: 50 }) } : require('./assets/images/img_placeholder.png')
       console.log(avatar)
       return (
         <Image
@@ -156,6 +156,7 @@ GiftedAvatar.defaultProps = {
   onPress: null,
   avatarStyle: {},
   textStyle: {},
+  imgURL: ''
 };
 
 GiftedAvatar.propTypes = {
@@ -163,4 +164,5 @@ GiftedAvatar.propTypes = {
   onPress: PropTypes.func,
   avatarStyle: Image.propTypes.style,
   textStyle: Text.propTypes.style,
+  imgURL: PropTypes.string
 };
