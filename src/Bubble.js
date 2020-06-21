@@ -133,7 +133,7 @@ export default class Bubble extends React.PureComponent {
 
   renderMessageIntroduction() {
     if (this.props.currentMessage.introduction) {
-      const {user, displayUserId, imgURL} = this.props
+      const {user, displayUserId, imgURL, onIntroductionPress} = this.props
       const {introduction} = this.props.currentMessage
       const users = introduction.users
       const status = introduction.status
@@ -165,6 +165,8 @@ export default class Bubble extends React.PureComponent {
       }  
       return (
         <MessageIntroduction
+        onAcceptPress={()=>onIntroductionPress(introduction, 'accept')}
+        onDenyPress={()=>onIntroductionPress(introduction, 'deny')}
          otherStatus={otherStatus.status} 
          myStatus={myStatus.status}
          userName={otherPerson.user_name} 
@@ -394,10 +396,12 @@ Bubble.defaultProps = {
   containerToNextStyle: {},
   containerToPreviousStyle: {},
   renderRetry: null,
-  imgURL: ''
+  imgURL: '',
+  onIntroductionPress: ()=>{}
 };
 
 Bubble.propTypes = {
+  onIntroductionPress: PropTypes.func,
   imgURL: PropTypes.string,
   user: PropTypes.object.isRequired,
   touchableProps: PropTypes.object,
