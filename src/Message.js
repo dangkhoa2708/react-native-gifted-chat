@@ -42,10 +42,12 @@ export default class Message extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    
     if ((nextProps.selectedId == this.props.currentMessage._id)
       || (this.props.currentMessage._id == this.props.selectedId)
       || (this.props.roomType != 'private' && (this.props.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id) || nextProps.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id)))
-      || (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId))) {
+      || (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId))
+      || (this.props.roomType == 'private' && (this.props.currentMessage.introduction != nextProps.currentMessage.introduction))) {
 
       return true
     }
