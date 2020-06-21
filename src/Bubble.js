@@ -10,6 +10,7 @@ import Time from './Time';
 import Color from './Color';
 
 import { isSameUser, isSameDay } from './utils';
+import MessageIntroduction from 'react-native-gifted-chat/src/MessageIntroduction';
 
 export default class Bubble extends React.PureComponent {
 
@@ -130,6 +131,50 @@ export default class Bubble extends React.PureComponent {
     return null;
   }
 
+  renderMessageIntroduction() {
+    if (this.props.currentMessage.introduction) {
+      const {user, displayUserId, imgURL} = this.props
+      const {introduction} = this.props.currentMessage
+      const users = introduction.users
+      const status = introduction.status
+      let otherPerson 
+      let myStatus
+      let otherStatus
+      console.log(imgURL)
+
+      if(introduction.sender_id == user._id){
+        const introducedPerson = users ? users.find(e=>e.id != displayUserId) : null
+        return (
+          <View style={{flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#b3d1ff'}}>
+            <Image 
+            style={{width: 30, height: 30}} 
+            resizeMode="contain" 
+            source={require('./assets/images/ic_star.png')}/>
+            <Text style={{marginHorizontal: 10}}>You have introduced <Text style={{fontWeight: "bold"}}>{introducedPerson.user_name}</Text></Text>
+          </View>
+        )
+      }
+      if(introduction.type_connection == 'business'){
+        otherPerson = users ? users[1] : null
+        myStatus = status ? status[0] : null
+        otherStatus = status ? status[1] : null
+      } else {
+        otherPerson = users ? users.find(e=>e.id != user._id) : null
+        myStatus = status ? status.find(e=>e.user_id == user._id) : null
+        otherStatus = status && otherPerson ? status.find(e=>e.user_id == otherPerson.id) : null
+      }  
+      return (
+        <MessageIntroduction
+         otherStatus={otherStatus.status} 
+         myStatus={myStatus.status}
+         userName={otherPerson.user_name} 
+         userAvtURL={imgURL + otherPerson.avatar}
+        />
+      )
+    }
+    return null;
+  }
+
   renderMessageImage() {
     if (this.props.currentMessage.image) {
       const { containerStyle, wrapperStyle, ...messageImageProps } = this.props;
@@ -211,7 +256,7 @@ export default class Bubble extends React.PureComponent {
     }
 
     const overflow = {
-      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'visible'
+      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'hidden'
     }
 
     return (
@@ -243,6 +288,7 @@ export default class Bubble extends React.PureComponent {
                 {this.renderMessageImage()}
                 {this.renderMessageVideo()}
                 {this.renderMessageText()}
+                {this.renderMessageIntroduction()}
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -347,10 +393,12 @@ Bubble.defaultProps = {
   tickStyle: {},
   containerToNextStyle: {},
   containerToPreviousStyle: {},
-  renderRetry: null
+  renderRetry: null,
+  imgURL: ''
 };
 
 Bubble.propTypes = {
+  imgURL: PropTypes.string,
   user: PropTypes.object.isRequired,
   touchableProps: PropTypes.object,
   onLongPress: PropTypes.func,
