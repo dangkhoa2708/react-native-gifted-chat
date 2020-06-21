@@ -6,9 +6,10 @@ export default function MessageIntroduction({
     userAvtURL,
     userName,
     myStatus,
-    otherStatus
+    otherStatus,
+    onAcceptPress,
+    onDenyPress
 }){
-    console.log(userAvtURL)
     const renderStatusField = ()=>{
         if(otherStatus == 'deny'){
             return <View  style={{
@@ -27,13 +28,13 @@ export default function MessageIntroduction({
         } else if (myStatus == 'pending'){
             return (
                 <View style={styles.btnField}>
-                    <TouchableOpacity style={[styles.btnCon,{
+                    <TouchableOpacity onPress={onAcceptPress} style={[styles.btnCon,{
                         borderRightWidth: 0.5,
                         borderRightColor: '#d9d9d9'
                     }]}>
                         <Text style={styles.actionText}>Accept</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnCon}>
+                    <TouchableOpacity onPress={onDenyPress} style={styles.btnCon}>
                         <Text style={styles.actionText}>Deny</Text>
                     </TouchableOpacity>
                 </View>
