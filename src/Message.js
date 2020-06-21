@@ -1,229 +1,67 @@
-/* eslint no-use-before-define: ["error", { "variables": false }] */
+/* eslint react-native/no-inline-styles: 0 */
 
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import React from 'react';
-import { Text, Clipboard, StyleSheet, TouchableOpacity, View, ViewPropTypes, TouchableWithoutFeedback, Image, Platform, ActivityIndicator } from 'react-native';
-import Video from 'react-native-video';
-import MessageText from './MessageText';
-import MessageImage from './MessageImage';
-import Time from './Time';
+import { View, ViewPropTypes, StyleSheet, Image, Text } from 'react-native';
+
+import Avatar from './Avatar';
 import Color from './Color';
+import Bubble from './Bubble';
+import SystemMessage from './SystemMessage';
+import Day from './Day';
+import Time from './Time';
+import Statement from './Statement'
 
 import { isSameUser, isSameDay } from './utils';
-import MessageIntroduction from 'react-native-gifted-chat/src/MessageIntroduction';
 
-export default class Bubble extends React.PureComponent {
+const styles = {
+  left: StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start',
+      marginLeft: 8,
+      marginRight: 0,
+    },
+  }),
+  right: StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end',
+      marginLeft: 0,
+      marginRight: 0,
+    },
+  }),
+};
 
-  constructor(props) {
-    super(props);
-    this.onLongPress = this.onLongPress.bind(this);
-  }
+export default class Message extends React.Component {
 
   state = {
-    paused: true,
-    showModal: false
+    showTime: false
   }
 
-  onLongPress() {
-    if (this.props.onLongPress) {
-      this.props.onLongPress(this.context, this.props.currentMessage);
-    } else if (this.props.currentMessage.text) {
-      const options = ['Copy Text', 'Cancel'];
-      const cancelButtonIndex = options.length - 1;
-      this.context.actionSheet().showActionSheetWithOptions(
-        {
-          options,
-          cancelButtonIndex,
-        },
-        (buttonIndex) => {
-          switch (buttonIndex) {
-            case 0:
-              Clipboard.setString(this.props.currentMessage.text);
-              break;
-            default:
-              break;
-          }
-        },
-      );
+  shouldComponentUpdate(nextProps) {
+    
+    if ((nextProps.selectedId == this.props.currentMessage._id)
+      || (this.props.currentMessage._id == this.props.selectedId)
+      || (this.props.roomType != 'private' && (this.props.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id) || nextProps.arrSeenMsg.some(e => e.msg_id == this.props.currentMessage._id)))
+      || (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId || this.props.currentMessage._id == nextProps.seenId))
+      || (this.props.roomType == 'private' && (this.props.currentMessage.introduction != nextProps.currentMessage.introduction))) {
+
+      return true
     }
+    return false
   }
 
-  handleBubbleToNext() {
-    if (
-      isSameUser(this.props.currentMessage, this.props.nextMessage) &&
-      isSameDay(this.props.currentMessage, this.props.nextMessage)
-    ) {
-      return StyleSheet.flatten([
-        styles[this.props.position].containerToNext,
-        this.props.containerToNextStyle[this.props.position],
-      ]);
-    }
-    return null;
-  }
-
-  handleBubbleToPrevious() {
-    if (
-      isSameUser(this.props.currentMessage, this.props.previousMessage) &&
-      isSameDay(this.props.currentMessage, this.props.previousMessage)
-    ) {
-      return StyleSheet.flatten([
-        styles[this.props.position].containerToPrevious,
-        this.props.containerToPreviousStyle[this.props.position],
-      ]);
-    }
-    return null;
-  }
-
-  renderMessageVideo() {
-    if (this.props.currentMessage.video) {
-      const { containerStyle, wrapperStyle, onVideoPress = (item) => { }, ...videoProps } = this.props;
-      return (
-        <TouchableWithoutFeedback
-          onPress={() => {
-            if (Platform.OS === 'ios') {
-              this.player.presentFullscreenPlayer()
-            } else {
-              onVideoPress(this.props.currentMessage)
-            }
-          }}
-        >
-          <View>
-            <Video
-              // controls
-              ref={(ref) => this.player = ref}
-              resizeMode="cover"
-              repeat
-              onEnd={() => { this.setState({ paused: true }) }}
-              paused={this.state.paused}
-              style={styles.containerVideo}
-              source={{ uri: this.props.currentMessage.video }}
-            />
-            <Image
-              source={require('./assets/images/Bitmap.png')}
-              style={{ position: 'absolute', top: 100, left: 50, width: 100, height: 100 }}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      )
-    }
-    if (this.props.currentMessage.video == '') {
-      return (
-        <View style={[styles.containerVideo, { alignItems: 'center', justifyContent: 'center' }]}>
-          <ActivityIndicator
-            animating
-            size="small"
-            color="black"
-          />
-        </View>
-      )
-    }
-    return null
-  }
-
-  renderMessageText() {
-    if (this.props.currentMessage.text) {
-      const { containerStyle, wrapperStyle, ...messageTextProps } = this.props;
-      if (this.props.renderMessageText) {
-        return this.props.renderMessageText(messageTextProps);
-      }
-      return <MessageText {...messageTextProps} />;
-    }
-    return null;
-  }
-
-  renderMessageIntroduction() {
-    if (this.props.currentMessage.introduction) {
-      const {user, displayUserId, imgURL, onIntroductionPress} = this.props
-      const {introduction} = this.props.currentMessage
-      const users = introduction.users
-      const status = introduction.status
-      let otherPerson 
-      let myStatus
-      let otherStatus
-      console.log(imgURL)
-
-      if(introduction.sender_id == user._id){
-        const introducedPerson = users ? users.find(e=>e.id != displayUserId) : null
-        return (
-          <View style={{flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#b3d1ff'}}>
-            <Image 
-            style={{width: 30, height: 30}} 
-            resizeMode="contain" 
-            source={require('./assets/images/ic_star.png')}/>
-            <Text style={{marginHorizontal: 10}}>You have introduced <Text style={{fontWeight: "bold"}}>{introducedPerson.user_name}</Text></Text>
-          </View>
-        )
-      }
-      if(introduction.type_connection == 'business'){
-        otherPerson = users ? users[1] : null
-        myStatus = status ? status[0] : null
-        otherStatus = status ? status[1] : null
-      } else {
-        otherPerson = users ? users.find(e=>e.id != user._id) : null
-        myStatus = status ? status.find(e=>e.user_id == user._id) : null
-        otherStatus = status && otherPerson ? status.find(e=>e.user_id == otherPerson.id) : null
-      }  
-      return (
-        <MessageIntroduction
-        onAcceptPress={()=>onIntroductionPress(introduction, 'accept')}
-        onDenyPress={()=>onIntroductionPress(introduction, 'deny')}
-         otherStatus={otherStatus.status} 
-         myStatus={myStatus.status}
-         userName={otherPerson.user_name} 
-         userAvtURL={imgURL + otherPerson.avatar}
-        />
-      )
-    }
-    return null;
-  }
-
-  renderMessageImage() {
-    if (this.props.currentMessage.image) {
-      const { containerStyle, wrapperStyle, ...messageImageProps } = this.props;
-      if (this.props.renderMessageImage) {
-        return this.props.renderMessageImage(messageImageProps);
-      }
-      return (
-        <TouchableOpacity onPress={() => {
-          this.setState({ showModal: true })
-        }}>
-          <MessageImage
-            onCancel={(func) => {
-              func()
-              this.setState({ showModal: false })
-            }}
-            showModal={this.state.showModal}
-            {...messageImageProps} />
-        </TouchableOpacity>
-      )
-    }
-    return null;
-  }
-
-  renderTicks() {
-    const { currentMessage } = this.props;
-    if (this.props.renderTicks) {
-      return this.props.renderTicks(currentMessage);
-    }
-    if (currentMessage.user._id !== this.props.user._id) {
-      return null;
-    }
-    if (currentMessage.sent || currentMessage.received) {
-      return (
-        <View style={styles.tickView}>
-          {currentMessage.sent && <Text style={[styles.tick, this.props.tickStyle]}>✓</Text>}
-          {currentMessage.received && <Text style={[styles.tick, this.props.tickStyle]}>✓</Text>}
-        </View>
-      );
-    }
-    return null;
-  }
-
-  renderRetry() {
-    if (this.props.renderRetry) {
-      return this.props.renderRetry(this.props);
-    }
-    return null;
+  getInnerComponentProps() {
+    const { containerStyle, selectedId, ...props } = this.props;
+    return {
+      ...props,
+      isSameUser,
+      isSameDay,
+      selectedId
+    };
   }
 
   renderTime() {
@@ -237,204 +75,233 @@ export default class Bubble extends React.PureComponent {
     return null;
   }
 
-  renderCustomView() {
-    if (this.props.renderCustomView) {
-      return this.props.renderCustomView(this.props);
+  renderDay() {
+    if (this.props.currentMessage.createdAt) {
+      const dayProps = this.getInnerComponentProps();
+      if (this.props.renderDay) {
+        return this.props.renderDay(dayProps);
+      }
+      return <Day {...dayProps} />;
     }
     return null;
   }
 
-  render() {
-    const {
-      onPress = (item) => { }
-    } = this.props
-    const selected = this.props.selectedId === this.props.currentMessage._id
-    const colorBackground = {
-      left: selected ? '#D3D3D3' : Color.leftBubbleBackground,
-      right: selected ? '#C0C6CE' : Color.rightBubbleBackground
+  renderBubble() {
+    const { onBubblePress = (item) => { }, onVideoPress = (item) => { } } = this.props
+    const bubbleProps = this.getInnerComponentProps();
+    if (this.props.renderBubble) {
+      return this.props.renderBubble(bubbleProps);
     }
-    const backgroundColor = {
-      backgroundColor: this.props.currentMessage.image ? null : colorBackground[this.props.position]
-    }
+    return <Bubble
+      onPress={onBubblePress}
+      onVideoPress={onVideoPress}
+      {...bubbleProps} />;
+  }
 
-    const overflow = {
-      overflow: this.props.currentMessage.image || this.props.currentMessage.video ? 'hidden' : 'hidden'
+  renderSystemMessage() {
+    const systemMessageProps = this.getInnerComponentProps();
+    if (this.props.renderSystemMessage) {
+      return this.props.renderSystemMessage(systemMessageProps);
     }
+    return <SystemMessage {...systemMessageProps} />;
+  }
 
+  renderStatement() {
+    const message = this.props.currentMessage.text
     return (
-      <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
-        <View style={[{ flexDirection: 'row', alignItems: 'center' }, styles[this.props.position].margin]}>
-          {this.props.position === 'right' &&
-            <View style={{ marginRight: 10 }}>
-              {this.renderRetry()}
-            </View>
-          }
-          <View
-            style={[
-              styles[this.props.position].wrapper,
-              this.props.wrapperStyle[this.props.position],
-              this.handleBubbleToNext(),
-              this.handleBubbleToPrevious(),
-              backgroundColor,
-              overflow
-            ]}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => onPress(this.props.currentMessage)}
-              onLongPress={this.onLongPress}
-              accessibilityTraits="text"
-              {...this.props.touchableProps}
-            >
-              <View>
-                {this.renderCustomView()}
-                {this.renderMessageImage()}
-                {this.renderMessageVideo()}
-                {this.renderMessageText()}
-                {this.renderMessageIntroduction()}
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
+      <View>
+        < Statement message={message} />
+        {this.renderArrSeen()}
+      </View>
+    )
+  }
+
+  convertToImgix = (url, options = {}) => {
+    // if (!url) return ''
+    // const queryStringArr = []
+    // for (const key of Object.keys(options)) {
+    //   queryStringArr.push(`${key}=${options[key]}`)
+    // }
+
+    // let queryString = ''
+    // if (queryStringArr.length > 0) {
+    //   queryString =
+    //     `?${queryStringArr.join('&')}&auto=format&dpr=2.0&fm=jpg&q=40"`
+    // } else {
+    //   queryString =
+    //     `?auto=format&fit=crop&dpr=2.0&fm=jpg&q=40`
+    // }
+    // url = url
+    //   .replace(
+    //     'https://skylabchat.s3.ap-south-1.amazonaws.com/',
+    //     'http://messageinternal.imgix.net/'
+    //   ) + queryString
+
+    return url
+  }
+
+  renderArrSeen = () => {
+    if (this.props.roomType != 'private') {
+      return (
+        <View style={{
+          alignSelf: 'flex-end',
+          flexDirection: 'row'
+        }}>
+          {this.renderArrSeenAvatar()}
         </View>
+      )
+    }
+  }
+
+  renderArrSeenAvatar = () => {
+    return this.props.arrSeenMsg.map((e) => {
+      if (this.props.currentMessage._id == e.msg_id) {
+        let avatarSource = null
+        if (this.props.roomType == 'business' && !this.props.openFromBusinessSide) {
+          avatarSource = this.props.businessInfo.avatar
+        } else {
+          avatarSource = e.avatar
+        }
+        const avatar = avatarSource ? { url: this.props.imgURL + this.convertToImgix(avatarSource, { w: 18, h: 18 }) } : require('./assets/images/img_placeholder.png')
+        return (
+          <Image
+            key={`${e.user_id}`}
+            source={avatar}
+            style={{
+              width: 18,
+              height: 18,
+              borderRadius: 9,
+              marginRight: 5,
+              marginBottom: 10
+            }}
+          />
+        )
+      } else {
+        return null
+      }
+    })
+  }
+
+  renderAvatarSeen = () => {
+    if (this.props.roomType == 'private' && (this.props.currentMessage._id == this.props.seenId)) {
+      const source = this.props.avatarSeen != '' ? { uri: this.props.imgURL + this.props.avatarSeen } : require('./assets/images/img_placeholder.png')
+      return (
+        <Image
+          source={source}
+          style={{
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            marginHorizontal: 3
+          }}
+        />
+      )
+    }
+    return (
+      <View
+        style={{
+          width: 18,
+          marginHorizontal: 3
+        }}
+      />
+    )
+  }
+
+  renderAvatar() {
+    if (this.props.user._id === this.props.currentMessage.user._id && !this.props.showUserAvatar) {
+      return null;
+    }
+    const avatarProps = this.getInnerComponentProps();
+    const { currentMessage } = avatarProps;
+    if (currentMessage.user.avatar === null) {
+      return null;
+    }
+    return <Avatar {...avatarProps} />;
+  }
+
+  render() {
+    const { currentMessage, nextMessage, previousMessage, inverted } = this.props
+    const sameUser = isSameUser(currentMessage, nextMessage);
+    const sameUser2 = isSameUser(currentMessage, previousMessage);
+    const color = this.props.customerInfo.id == this.props.currentMessage.user._id ? Color.defaultBlue : Color.defaultColor
+    return (
+      <View>
+        {this.renderDay()}
+        {currentMessage.system ? (
+          this.renderSystemMessage()
+        ) : (
+            currentMessage.type == 'statement'
+              ? this.renderStatement()
+              : (
+                <View>
+                  {this.props.selectedId === this.props.currentMessage._id &&
+                    isSameDay(currentMessage, inverted ? previousMessage : nextMessage) &&
+                    < View style={{ alignItems: 'center' }}>
+                      {this.renderTime()}
+                    </View>
+                  }
+                  {(this.props.position === 'left' && !sameUser2 && this.props.roomType != 'private') && < Text style={{
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: '500',
+                    marginBottom: 4,
+                    marginLeft: 50
+                  }}> {this.props.currentMessage.user.name}</Text>}
+                  <View
+                    style={[
+                      styles[this.props.position].container,
+                      { marginBottom: sameUser ? 2 : 10 },
+                      !this.props.inverted && { marginBottom: 2 },
+                      this.props.containerStyle[this.props.position],
+                    ]}
+                  >
+                    {this.props.position === 'left' ? this.renderAvatar() : null}
+                    {this.renderBubble()}
+                    {this.props.position === 'right' ? this.renderAvatar() : null}
+                    {this.renderAvatarSeen()}
+                  </View>
+
+                  {this.renderArrSeen()}
+                </View>
+              ))
+        }
       </View>
     );
   }
 
 }
 
-const styles = {
-  left: StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'flex-start',
-    },
-    wrapper: {
-      borderRadius: 15,
-      backgroundColor: Color.leftBubbleBackground,
-      minHeight: 20,
-      borderWidth: 0.5,
-      borderColor: "#CECECE",
-      justifyContent: 'flex-end',
-    },
-    containerToNext: {
-      borderBottomLeftRadius: 3,
-    },
-    containerToPrevious: {
-      borderTopLeftRadius: 3,
-    },
-    margin: {
-      marginRight: 60
-    }
-  }),
-  right: StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'flex-end',
-    },
-    wrapper: {
-      borderRadius: 15,
-      backgroundColor: Color.defaultBlue,
-      // marginLeft: 60,
-      minHeight: 20,
-      justifyContent: 'flex-end',
-    },
-    containerToNext: {
-      borderBottomRightRadius: 3,
-    },
-    containerToPrevious: {
-      borderTopRightRadius: 3,
-    },
-    margin: {
-      marginLeft: 60
-    }
-  }),
-  bottom: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  tick: {
-    fontSize: 10,
-    backgroundColor: Color.backgroundTransparent,
-    color: Color.white,
-  },
-  tickView: {
-    flexDirection: 'row',
-    marginRight: 10,
-  },
-  containerVideo: {
-    width: 200,
-    height: 300
-  },
-  image: {
-    flex: 1
-  }
-};
-
-Bubble.contextTypes = {
-  actionSheet: PropTypes.func,
-};
-
-Bubble.defaultProps = {
-  touchableProps: {},
-  onLongPress: null,
-  renderMessageImage: null,
-  renderMessageText: null,
-  renderCustomView: null,
-  renderTicks: null,
-  renderTime: null,
+Message.defaultProps = {
+  renderAvatar: undefined,
+  renderBubble: null,
+  renderDay: null,
+  renderSystemMessage: null,
   position: 'left',
-  currentMessage: {
-    text: null,
-    createdAt: null,
-    image: null,
-  },
+  currentMessage: {},
   nextMessage: {},
   previousMessage: {},
+  user: {},
   containerStyle: {},
-  wrapperStyle: {},
-  bottomContainerStyle: {},
-  tickStyle: {},
-  containerToNextStyle: {},
-  containerToPreviousStyle: {},
-  renderRetry: null,
-  imgURL: '',
-  onIntroductionPress: ()=>{}
+  showUserAvatar: true,
+  inverted: true,
+  imgURL: string
 };
 
-Bubble.propTypes = {
-  onIntroductionPress: PropTypes.func,
-  imgURL: PropTypes.string,
-  user: PropTypes.object.isRequired,
-  touchableProps: PropTypes.object,
-  onLongPress: PropTypes.func,
-  renderMessageImage: PropTypes.func,
-  renderMessageText: PropTypes.func,
-  renderCustomView: PropTypes.func,
-  renderRetry: PropTypes.func,
-  renderTime: PropTypes.func,
-  renderTicks: PropTypes.func,
+Message.propTypes = {
+  renderAvatar: PropTypes.func,
+  showUserAvatar: PropTypes.bool,
+  renderBubble: PropTypes.func,
+  renderDay: PropTypes.func,
+  renderSystemMessage: PropTypes.func,
   position: PropTypes.oneOf(['left', 'right']),
   currentMessage: PropTypes.object,
   nextMessage: PropTypes.object,
   previousMessage: PropTypes.object,
+  user: PropTypes.object,
+  inverted: PropTypes.bool,
   containerStyle: PropTypes.shape({
     left: ViewPropTypes.style,
     right: ViewPropTypes.style,
   }),
-  wrapperStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  bottomContainerStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  tickStyle: Text.propTypes.style,
-  containerToNextStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
-  containerToPreviousStyle: PropTypes.shape({
-    left: ViewPropTypes.style,
-    right: ViewPropTypes.style,
-  }),
+  imgURL: PropTypes.string
 };
